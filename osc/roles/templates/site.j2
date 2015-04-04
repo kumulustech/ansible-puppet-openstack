@@ -1,0 +1,8 @@
+node 'puppet' {
+  include ::ntp
+}
+
+node '{{ ansible_fqdn }}' {
+  include ::openstack::role::allinone
+  include ::ntp
+}

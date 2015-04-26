@@ -1,0 +1,287 @@
+10.1.10.56 | success >> {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "10.10.10.17", 
+            "10.0.10.57", 
+            "10.10.20.17", 
+            "10.10.30.17"
+        ], 
+        "ansible_all_ipv6_addresses": [
+            "fe80::f816:3eff:fef7:d32c", 
+            "fe80::f816:3eff:feb4:47dd", 
+            "fe80::f816:3eff:fe9f:5f35", 
+            "fe80::f816:3eff:fea1:878d"
+        ], 
+        "ansible_architecture": "x86_64", 
+        "ansible_bios_date": "01/01/2007", 
+        "ansible_bios_version": "0.5.1", 
+        "ansible_cmdline": {
+            "BOOT_IMAGE": "/boot/vmlinuz-3.10.0-123.9.3.el7.x86_64", 
+            "LANG": "en_US.UTF-8", 
+            "console": "ttyS0,115200n8", 
+            "crashkernel": "auto", 
+            "ro": true, 
+            "root": "UUID=c2ca95b2-6cfd-4f33-be5b-59992d300ba9", 
+            "vconsole.font": "latarcyrheb-sun16", 
+            "vconsole.keymap": "us"
+        }, 
+        "ansible_date_time": {
+            "date": "2015-04-08", 
+            "day": "08", 
+            "epoch": "1428473873", 
+            "hour": "06", 
+            "iso8601": "2015-04-08T06:17:53Z", 
+            "iso8601_micro": "2015-04-08T06:17:53.430293Z", 
+            "minute": "17", 
+            "month": "04", 
+            "second": "53", 
+            "time": "06:17:53", 
+            "tz": "UTC", 
+            "tz_offset": "+0000", 
+            "weekday": "Wednesday", 
+            "year": "2015"
+        }, 
+        "ansible_default_ipv4": {
+            "address": "10.0.10.57", 
+            "alias": "eth0", 
+            "gateway": "10.0.10.1", 
+            "interface": "eth0", 
+            "macaddress": "fa:16:3e:b4:47:dd", 
+            "mtu": 1500, 
+            "netmask": "255.255.255.0", 
+            "network": "10.0.10.0", 
+            "type": "ether"
+        }, 
+        "ansible_default_ipv6": {}, 
+        "ansible_devices": {
+            "vda": {
+                "holders": [], 
+                "host": "", 
+                "model": null, 
+                "partitions": {
+                    "vda1": {
+                        "sectors": "268428037", 
+                        "sectorsize": 512, 
+                        "size": "128.00 GB", 
+                        "start": "2048"
+                    }
+                }, 
+                "removable": "0", 
+                "rotational": "1", 
+                "scheduler_mode": "deadline", 
+                "sectors": "268435456", 
+                "sectorsize": "512", 
+                "size": "128.00 GB", 
+                "support_discard": "0", 
+                "vendor": "0x1af4"
+            }
+        }, 
+        "ansible_distribution": "CentOS", 
+        "ansible_distribution_major_version": "7", 
+        "ansible_distribution_release": "Core", 
+        "ansible_distribution_version": "7.0.1406", 
+        "ansible_domain": "", 
+        "ansible_env": {
+            "HOME": "/root", 
+            "LANG": "C", 
+            "LC_CTYPE": "C", 
+            "LESSOPEN": "||/usr/bin/lesspipe.sh %s", 
+            "LOGNAME": "root", 
+            "MAIL": "/var/mail/root", 
+            "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin", 
+            "PWD": "/root", 
+            "SELINUX_LEVEL_REQUESTED": "", 
+            "SELINUX_ROLE_REQUESTED": "", 
+            "SELINUX_USE_CURRENT_RANGE": "", 
+            "SHELL": "/bin/bash", 
+            "SHLVL": "2", 
+            "SSH_CLIENT": "10.1.10.15 33666 22", 
+            "SSH_CONNECTION": "10.1.10.15 33666 10.0.10.57 22", 
+            "SSH_TTY": "/dev/pts/1", 
+            "TERM": "xterm-256color", 
+            "USER": "root", 
+            "XDG_RUNTIME_DIR": "/run/user/0", 
+            "XDG_SESSION_ID": "7", 
+            "_": "/usr/bin/python"
+        }, 
+        "ansible_eth0": {
+            "active": true, 
+            "device": "eth0", 
+            "ipv4": {
+                "address": "10.0.10.57", 
+                "netmask": "255.255.255.0", 
+                "network": "10.0.10.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "fe80::f816:3eff:feb4:47dd", 
+                    "prefix": "64", 
+                    "scope": "link"
+                }
+            ], 
+            "macaddress": "fa:16:3e:b4:47:dd", 
+            "module": "virtio_net", 
+            "mtu": 1500, 
+            "promisc": false, 
+            "type": "ether"
+        }, 
+        "ansible_eth1": {
+            "active": true, 
+            "device": "eth1", 
+            "ipv4": {
+                "address": "10.10.10.17", 
+                "netmask": "255.255.255.0", 
+                "network": "10.10.10.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "fe80::f816:3eff:fef7:d32c", 
+                    "prefix": "64", 
+                    "scope": "link"
+                }
+            ], 
+            "macaddress": "fa:16:3e:f7:d3:2c", 
+            "module": "virtio_net", 
+            "mtu": 1500, 
+            "promisc": false, 
+            "type": "ether"
+        }, 
+        "ansible_eth2": {
+            "active": true, 
+            "device": "eth2", 
+            "ipv4": {
+                "address": "10.10.20.17", 
+                "netmask": "255.255.255.0", 
+                "network": "10.10.20.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "fe80::f816:3eff:fe9f:5f35", 
+                    "prefix": "64", 
+                    "scope": "link"
+                }
+            ], 
+            "macaddress": "fa:16:3e:9f:5f:35", 
+            "module": "virtio_net", 
+            "mtu": 1500, 
+            "promisc": false, 
+            "type": "ether"
+        }, 
+        "ansible_eth3": {
+            "active": true, 
+            "device": "eth3", 
+            "ipv4": {
+                "address": "10.10.30.17", 
+                "netmask": "255.255.255.0", 
+                "network": "10.10.30.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "fe80::f816:3eff:fea1:878d", 
+                    "prefix": "64", 
+                    "scope": "link"
+                }
+            ], 
+            "macaddress": "fa:16:3e:a1:87:8d", 
+            "module": "virtio_net", 
+            "mtu": 1500, 
+            "promisc": false, 
+            "type": "ether"
+        }, 
+        "ansible_fips": false, 
+        "ansible_form_factor": "Other", 
+        "ansible_fqdn": "control3", 
+        "ansible_hostname": "control3", 
+        "ansible_interfaces": [
+            "lo", 
+            "eth3", 
+            "eth2", 
+            "eth1", 
+            "eth0"
+        ], 
+        "ansible_kernel": "3.10.0-123.9.3.el7.x86_64", 
+        "ansible_lo": {
+            "active": true, 
+            "device": "lo", 
+            "ipv4": {
+                "address": "127.0.0.1", 
+                "netmask": "255.0.0.0", 
+                "network": "127.0.0.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "::1", 
+                    "prefix": "128", 
+                    "scope": "host"
+                }
+            ], 
+            "mtu": 65536, 
+            "promisc": false, 
+            "type": "loopback"
+        }, 
+        "ansible_machine": "x86_64", 
+        "ansible_memfree_mb": 31623, 
+        "ansible_memtotal_mb": 32014, 
+        "ansible_mounts": [
+            {
+                "device": "/dev/vda1", 
+                "fstype": "xfs", 
+                "mount": "/", 
+                "options": "rw,seclabel,relatime,attr2,inode64,noquota", 
+                "size_available": 136599052288, 
+                "size_total": 137424666624
+            }
+        ], 
+        "ansible_nodename": "control3", 
+        "ansible_os_family": "RedHat", 
+        "ansible_pkg_mgr": "yum", 
+        "ansible_processor": [
+            "GenuineIntel", 
+            "Intel Xeon E312xx (Sandy Bridge)", 
+            "GenuineIntel", 
+            "Intel Xeon E312xx (Sandy Bridge)", 
+            "GenuineIntel", 
+            "Intel Xeon E312xx (Sandy Bridge)", 
+            "GenuineIntel", 
+            "Intel Xeon E312xx (Sandy Bridge)", 
+            "GenuineIntel", 
+            "Intel Xeon E312xx (Sandy Bridge)", 
+            "GenuineIntel", 
+            "Intel Xeon E312xx (Sandy Bridge)", 
+            "GenuineIntel", 
+            "Intel Xeon E312xx (Sandy Bridge)", 
+            "GenuineIntel", 
+            "Intel Xeon E312xx (Sandy Bridge)"
+        ], 
+        "ansible_processor_cores": 1, 
+        "ansible_processor_count": 8, 
+        "ansible_processor_threads_per_core": 1, 
+        "ansible_processor_vcpus": 8, 
+        "ansible_product_name": "OpenStack Nova", 
+        "ansible_product_serial": "b94257c1-c822-484b-9a3f-32028995b7d3", 
+        "ansible_product_uuid": "D348D1D2-CE2A-44C7-9439-898612D43420", 
+        "ansible_product_version": "2014.1.3-3.el6", 
+        "ansible_python_version": "2.7.5", 
+        "ansible_selinux": {
+            "config_mode": "enforcing", 
+            "mode": "enforcing", 
+            "policyvers": 28, 
+            "status": "enabled", 
+            "type": "targeted"
+        }, 
+        "ansible_ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBClcAVtXacuRCeqj4L6QMJZvawf23JSgZQL2oCzQOYv/rrmLZORz10WKpeE/vLt8bI+h6tgXs2hUVJqW98Ga5NY=", 
+        "ansible_ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABAQCjwfWT3RmSdEMD03XflCdi02lp7Fg6jBngiM5euvfhaEzW7+S7NHVMkn7G2/yLjH8TmdrAvBw/pKuW2VEp8wKUiOWuKknRzeodgSg/YhNZozZ5vchF9dCpq3b44N9HAv86HQnRFLfnUoGf0BsTBYUS7FLhioL0cEK7I1H5CfdjE3Ustb5nKbJopridYXFfqJmI7nk25hYB1+GBDTGyBJ1mnypsLr9DioAbgtvkyg7IwZVeKLcy1YBPi8g2h5awyHD8GniHLAkOum757ZKPN3uzJAIcinZo+eN+LSvbWV5bq+8niFeJJd7Fc+o9Rj2C12+smzWN+Uae1MB5S4Bd2rqv", 
+        "ansible_swapfree_mb": 0, 
+        "ansible_swaptotal_mb": 0, 
+        "ansible_system": "Linux", 
+        "ansible_system_vendor": "RDO Project", 
+        "ansible_user_id": "root", 
+        "ansible_userspace_architecture": "x86_64", 
+        "ansible_userspace_bits": "64", 
+        "ansible_virtualization_role": "NA", 
+        "ansible_virtualization_type": "NA", 
+        "module_setup": true
+    }, 
+    "changed": false
+}
+

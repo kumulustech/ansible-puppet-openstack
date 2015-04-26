@@ -1,0 +1,6 @@
+---
+- hosts: openstack
+
+  tasks:
+  - name: run puppet
+    command: puppet apply -vd /etc/puppet/manifests/site.pp

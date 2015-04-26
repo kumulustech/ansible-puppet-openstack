@@ -1,0 +1,10 @@
+DEVICE="eth2"
+BOOTPROTO="static"
+IPADDR=10.10.20.19
+NETMASK=255.255.255.0
+ONBOOT="yes"
+TYPE="Ethernet"
+USERCTL="yes"
+IPV6INIT="no"
+PEERDNS="yes"
+

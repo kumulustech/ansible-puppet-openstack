@@ -1,0 +1,78 @@
+---
+- hosts: db1
+  gather_facts: True
+  tasks:
+  - name: ensure packages are updated
+    apt: update_cache=yes
+  - name: upgrage any updateable packages
+    apt: upgrade=full
+  - name: install mysql
+    apt:
+      name: "{{ item }}"
+    with_items:
+      - python-mysqldb
+      - mysql-server
+      - mysql-client
+  - name: adjust bind-address
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: bind-address
+      value: 0.0.0.0
+  - name: add mysql server-id
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: server-id
+      value: 1
+  - name: add binary log path
+    ini_file: 
+      dest: /etc/my.cnf
+      section: mysqld
+      option: log_bin
+      value: /var/log/mysql/mysql-bin.log
+  - name: add database list
+    ini_file: 
+      dest: /etc/my.cnf
+      section: mysqld
+      option: binlog_do_db
+      value: example
+
+- hosts: db2
+  gather_facts: True
+  tasks:
+  - name: ensure packages are updated
+    apt: update_cache=yes
+  - name: upgrage any updateable packages
+    apt: upgrade=full
+  - name: install mysql
+    apt:
+      name: "{{ item }}"
+    with_items:
+      - python-mysqldb
+      - mysql-server
+      - mysql-client
+  - name: adjust bind-address
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: bind-address
+      value: 0.0.0.0
+  - name: add mysql server-id
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: server-id
+      value: 1
+  - name: add binary log path
+    ini_file: 
+      dest: /etc/my.cnf
+      section: mysqld
+      option: log_bin
+      value: /var/log/mysql/mysql-bin.log
+  - name: add database list
+    ini_file: 
+      dest: /etc/my.cnf
+      section: mysqld
+      option: binlog_do_db
+      value: example

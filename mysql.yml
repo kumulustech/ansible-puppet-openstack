@@ -15,25 +15,25 @@
       - mysql-client
   - name: adjust bind-address
     ini_file:
-      dest: /etc/my.cnf
+      dest: /etc/mysql/my.cnf
       section: mysqld
       option: bind-address
       value: 0.0.0.0
   - name: add mysql server-id
     ini_file:
-      dest: /etc/my.cnf
+      dest: /etc/mysql/my.cnf
       section: mysqld
       option: server-id
       value: 1
   - name: add binary log path
     ini_file: 
-      dest: /etc/my.cnf
+      dest: /etc/mysql/my.cnf
       section: mysqld
       option: log_bin
       value: /var/log/mysql/mysql-bin.log
   - name: add database list
     ini_file: 
-      dest: /etc/my.cnf
+      dest: /etc/mysql/my.cnf
       section: mysqld
       option: binlog_do_db
       value: example
@@ -54,25 +54,25 @@
       - mysql-client
   - name: adjust bind-address
     ini_file:
-      dest: /etc/my.cnf
+      dest: /etc/mysql/my.cnf
       section: mysqld
       option: bind-address
       value: 0.0.0.0
   - name: add mysql server-id
     ini_file:
-      dest: /etc/my.cnf
+      dest: /etc/mysql/my.cnf
       section: mysqld
       option: server-id
       value: 1
   - name: add binary log path
     ini_file: 
-      dest: /etc/my.cnf
+      dest: /etc/mysql/my.cnf
       section: mysqld
       option: log_bin
       value: /var/log/mysql/mysql-bin.log
   - name: add database list
     ini_file: 
-      dest: /etc/my.cnf
+      dest: /etc/mysql/my.cnf
       section: mysqld
       option: binlog_do_db
       value: example

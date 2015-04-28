@@ -59,7 +59,7 @@
       dest: /etc/my.cnf
       section: mysqld
       option: server-id
-      value: 1
+      value: 2
   - name: add binary log path
     ini_file: 
       dest: /etc/my.cnf

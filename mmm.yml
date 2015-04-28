@@ -1,0 +1,49 @@
+---
+- hosts: db1
+  sudo: yes
+  gather_facts: True
+- hosts: db2
+  sudo: yes
+  gather_facts: True
+- hosts: db1
+  sudo: yes
+  gather_facts: True
+  tasks:
+  - name: Get the current master servers replication status
+    mysql_replication: mode=getmaster
+    delegate_to: "{{ hostvars['db2']['ansible_eth0']['ipv4']['address'] }}"
+    register: repl_stat
+  - name: Change the master in slave to start the replication
+    mysql_replication: 
+      mode: changemaster
+      master_host: "{{ hostvars['db2']['ansible_eth0']['ipv4']['address'] }}"
+      master_log_file: "{{ repl_stat.File }}"
+      master_log_pos: "{{ repl_stat.Position }}"
+      master_user: repl
+      master_password: repl
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted
+
+
+- hosts: db2
+  sudo: yes
+  gather_facts: True
+  tasks:
+  - name: Get the current master servers replication status
+    mysql_replication: mode=getmaster
+    delegate_to: "{{ hostvars['db1']['ansible_eth0']['ipv4']['address'] }}"
+    register: repl_stat
+  - name: Change the master in slave to start the replication
+    mysql_replication: 
+      mode: changemaster
+      master_host: "{{ hostvars['db1']['ansible_eth0']['ipv4']['address'] }}"
+      master_log_file: "{{ repl_stat.File }}"
+      master_log_pos: "{{ repl_stat.Position }}"
+      master_user: repl
+      master_password: repl
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted

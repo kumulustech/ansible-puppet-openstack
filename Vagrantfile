@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider :digital_ocean do |provider,override|
     override.ssh.private_key_path = "~/.ssh/id_rsa"
-    provider.token = "XXXXX"
+    provider.token = "XXXX"
     provider.image = "centos-7-0-x64"
     provider.region = "sfo1"
     provider.size = "1gb"

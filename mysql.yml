@@ -11,30 +11,71 @@
       - MySQL-python
       - mariadb-server
       - mariadb
-  - name: adjust bind-address
-    ini_file:
-      dest: /etc/my.cnf
-      section: mysqld
-      option: bind-address
-      value: 0.0.0.0
+    # notify:
+    #   - restart_mariadb
   - name: add mysql server-id
     ini_file:
-      dest: /etc/my.cnf
+      dest: /etc/my.cnf.d/server.cnf
       section: mysqld
       option: server-id
       value: 1
   - name: add binary log path
     ini_file: 
-      dest: /etc/my.cnf
+      dest: /etc/my.cnf.d/server.cnf
       section: mysqld
       option: log_bin
-      value: /var/log/mysql/mysql-bin.log
+      value: /var/lib/mysql/mariadb-bin.log
+  - name: add binary log index path
+    ini_file:
+      dest: /etc/my.cnf.d/server.cnf
+      section: mysqld
+      option: log_bin_index
+      value: /var/lib/mysql/mariadb-bin.index
   - name: add database list
     ini_file: 
-      dest: /etc/my.cnf
+      dest: /etc/my.cnf.d/server.cnf
       section: mysqld
       option: binlog_do_db
       value: example
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted
+  - name: add example database
+    mysql_db:
+      name: example
+      state: present
+  - name: add replication user
+    mysql_user:
+      name: repl
+      password: repl
+      host: "%"
+      priv: "*.*:REPLICATION SLAVE,REPLICATION CLIENT"
+      state: present
+  # - name: Get the current master servers replication status
+  #   mysql_replication: mode=getmaster
+  #   delegate_to: "{{ hostvars['db2']['ansible_eth0']['ipv4']['address'] }}"
+  #   register: repl_stat
+  # - name: Change the master in slave to start the replication
+  #   mysql_replication: 
+  #     mode: changemaster
+  #     master_host: {{ hostvars['db2']['ansible_eth0']['ipv4']['address'] }}
+  #     master_log_file: {{ repl_stat.File }}
+  #     master_log_pos: {{ repl_stat.Position }}
+  #     master_user: repl
+  #     master_password: repl
+  - name: add Bill's keys
+    authorized_key:
+      user: root
+      exclusive: no
+      key: https://github.com/bshetti.keys
+      state: present
+  - name: add Robert's keys
+    authorized_key:
+      user: root
+      exclusive: no
+      key: https://github.com/rstarmer.keys
+      state: present
 
 - hosts: db2
   sudo: yes
@@ -48,27 +89,67 @@
       - MySQL-python
       - mariadb-server
       - mariadb
-  - name: adjust bind-address
-    ini_file:
-      dest: /etc/my.cnf
-      section: mysqld
-      option: bind-address
-      value: 0.0.0.0
+    # notify:
+    #   - restart_mariadb
   - name: add mysql server-id
     ini_file:
-      dest: /etc/my.cnf
+      dest: /etc/my.cnf.d/server.cnf
       section: mysqld
       option: server-id
-      value: 1
+      value: 2
   - name: add binary log path
     ini_file: 
-      dest: /etc/my.cnf
+      dest: /etc/my.cnf.d/server.cnf
       section: mysqld
       option: log_bin
-      value: /var/log/mysql/mysql-bin.log
+      value: /var/lib/mysql/mariadb-bin
+  - name: add binary log index path
+    ini_file:
+      dest: /etc/my.cnf.d/server.cnf
+      section: mysqld
+      option: log_bin_index
+      value: /var/lib/mysql/mariadb-bin.index
   - name: add database list
     ini_file: 
-      dest: /etc/my.cnf
+      dest: /etc/my.cnf.d/server.cnf
       section: mysqld
       option: binlog_do_db
       value: example
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted
+  - name: add example database
+    mysql_db:
+      name: example
+      state: present
+  - name: add replication user
+    mysql_user:
+      name: repl
+      password: repl
+      host: "%"
+      priv: "*.*:REPLICATION SLAVE,REPLICATION CLIENT"
+      state: present
+  # - name: Get the current master servers replication status
+  #   mysql_replication: mode=getmaster
+  #   delegate_to: "{{ hostvars['db1']['ansible_eth0']['ipv4']['address'] }}"
+  #   register: repl_stat
+  # - name: Change the master in slave to start the replication
+  #   mysql_replication: 
+  #     mode: changemaster
+  #     master_host: {{ hostvars['db1']['ansible_eth0']['ipv4']['address'] }}
+  #     master_log_file: {{ repl_stat.File }}
+  #     master_log_pos: {{ repl_stat.Position }}
+  #     master_user: repl
+  #     master_password: repl
+  - name: add Bill's keys
+    authorized_key:
+      user: root
+      exclusive: no
+      key: https://github.com/bshetti.keys
+  - name: add Robert's keys
+    authorized_key:
+      user: root
+      exclusive: no
+      key: https://github.com/rstarmer.keys
+

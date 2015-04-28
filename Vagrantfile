@@ -7,12 +7,14 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider :virtualbox do |provider,override|
+#    override.ssh.private_key_path = "~/.ssh/id_rsa"
+ #   override.ssh.username = 'root'
     override.vm.box = 'vStone/centos-7.x-puppet.3.x'
   end
 
   config.vm.provider :digital_ocean do |provider,override|
     override.ssh.private_key_path = "~/.ssh/id_rsa"
-    provider.token = "XXXX"
+    provider.token = "XXXXX"
     provider.image = "centos-7-0-x64"
     provider.region = "sfo1"
     provider.size = "1gb"
@@ -34,12 +36,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "db1" do |db1|
     db1.vm.provision "ansible" do |ansible|
       ansible.playbook = "mysql.yml"
+      ansible.limit = "all"
     end
   end
 
   config.vm.define "db2" do |db2|
     db2.vm.provision "ansible" do |ansible|
       ansible.playbook = "mysql.yml"
+      ansible.limit = "all"
     end
   end
 

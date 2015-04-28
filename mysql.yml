@@ -1,4 +1,12 @@
 ---
+- set_fact:
+    db1_addr: "{{ hostvars['db1']['ansible_eth0']['ipv4']['address'] }}"
+- set_fact:
+    db2_addr: "{{ hostvars['db2']['ansible_eth0']['ipv4']['address'] }}"
+- hosts: db1
+  gather_facts: True
+- hosts: db2
+  gather_facts: True
 - hosts: db1
   sudo: yes
   gather_facts: True
@@ -52,18 +60,18 @@
       host: "%"
       priv: "*.*:REPLICATION SLAVE,REPLICATION CLIENT"
       state: present
-  # - name: Get the current master servers replication status
-  #   mysql_replication: mode=getmaster
-  #   delegate_to: "{{ hostvars['db2']['ansible_eth0']['ipv4']['address'] }}"
-  #   register: repl_stat
-  # - name: Change the master in slave to start the replication
-  #   mysql_replication: 
-  #     mode: changemaster
-  #     master_host: {{ hostvars['db2']['ansible_eth0']['ipv4']['address'] }}
-  #     master_log_file: {{ repl_stat.File }}
-  #     master_log_pos: {{ repl_stat.Position }}
-  #     master_user: repl
-  #     master_password: repl
+  - name: Get the current master servers replication status
+    mysql_replication: mode=getmaster
+    #delegate_to: "{{ db2_addr }}"
+    register: repl_stat
+  - name: Change the master in slave to start the replication
+    mysql_replication: 
+      mode: changemaster
+      master_host: "{{ db2_addr }}"
+      master_log_file: "{{ repl_stat.File }}"
+      master_log_pos: "{{ repl_stat.Position }}"
+      master_user: repl
+      master_password: repl
   - name: add Bill's keys
     authorized_key:
       user: root
@@ -130,18 +138,18 @@
       host: "%"
       priv: "*.*:REPLICATION SLAVE,REPLICATION CLIENT"
       state: present
-  # - name: Get the current master servers replication status
-  #   mysql_replication: mode=getmaster
-  #   delegate_to: "{{ hostvars['db1']['ansible_eth0']['ipv4']['address'] }}"
-  #   register: repl_stat
-  # - name: Change the master in slave to start the replication
-  #   mysql_replication: 
-  #     mode: changemaster
-  #     master_host: {{ hostvars['db1']['ansible_eth0']['ipv4']['address'] }}
-  #     master_log_file: {{ repl_stat.File }}
-  #     master_log_pos: {{ repl_stat.Position }}
-  #     master_user: repl
-  #     master_password: repl
+  - name: Get the current master servers replication status
+    mysql_replication: mode=getmaster
+   # delegate_to: "{{ hostvars['db1']['ansible_eth0']['ipv4']['address'] }}"
+    register: repl_stat
+  - name: Change the master in slave to start the replication
+    mysql_replication: 
+      mode: changemaster
+      master_host: "{{ db1_addr }}"
+      master_log_file: "{{ repl_stat.File }}"
+      master_log_pos: "{{ repl_stat.Position }}"
+      master_user: repl
+      master_password: repl
   - name: add Bill's keys
     authorized_key:
       user: root

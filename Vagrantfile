@@ -6,10 +6,12 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  config.ssh.insert_key = false
+
   config.vm.provider :virtualbox do |provider,override|
 #    override.ssh.private_key_path = "~/.ssh/id_rsa"
  #   override.ssh.username = 'root'
-    override.vm.box = 'vStone/centos-7.x-puppet.3.x'
+    override.vm.box = 'chef/centos-7.0'
   end
 
   config.vm.provider :digital_ocean do |provider,override|
@@ -18,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     provider.image = "centos-7-0-x64"
     provider.region = "sfo1"
     provider.size = "1gb"
-    provider.ssh_key_name = "YYY"
+    provider.ssh_key_name = "YYYYY"
     override.vm.box = 'digital_ocean'
     override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
     provider.ipv6 = true
@@ -36,15 +38,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "db1" do |db1|
     db1.vm.provision "ansible" do |ansible|
       ansible.playbook = "mysql.yml"
-      ansible.limit = "all"
+#      ansible.limit = "all"
     end
+    config.vm.network :private_network, ip: '192.168.56.11'
   end
 
   config.vm.define "db2" do |db2|
     db2.vm.provision "ansible" do |ansible|
       ansible.playbook = "mysql.yml"
-      ansible.limit = "all"
+#      ansible.limit = "all"
     end
+    config.vm.network :private_network, ip: '192.168.56.12'
   end
 
 end

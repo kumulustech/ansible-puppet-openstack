@@ -1,0 +1,39 @@
+---
+- hosts: openstack
+
+  tasks:
+  #install python-mysqldb
+  - name: install MySQL-python
+    yum: name=MySQL-python state=present
+
+  - name: add mysql server-id
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: server-id
+      value: 1
+  - name: add binary log path
+    ini_file: 
+      dest: /etc/my.cnf
+      section: mysqld
+      option: log_bin
+      value: /var/log/mariadb/mariadb-bin.log
+  - name: add binary log index path
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: log_bin_index
+      value: /var/log/mariadb/mariadb-bin.index
+  - name: add database list
+    ini_file: 
+      dest: /etc/my.cnf
+      section: mysqld
+      option: binlog_do_db
+      value: example
+  - name: add replication user
+    mysql_user:
+      name: replicator
+      password: password
+      host: "%"
+      priv: "*.*:REPLICATION SLAVE"
+      state: present

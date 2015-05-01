@@ -29,7 +29,14 @@
       dest: /etc/my.cnf
       section: mysqld
       option: binlog_do_db
-      value: example
+      value: "{{ item }}"
+    with_items:
+      nova
+      neutron
+      glance
+      cinder
+      keystone
+      heat
   - name: add replication user
     mysql_user:
       name: replicator

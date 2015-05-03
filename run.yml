@@ -1,0 +1,11 @@
+---
+- name: and here it begins
+  hosts: openstack
+  remote_user: centos
+  sudo: yes
+
+- include: prep.yml
+- include: control.yml
+- include: puppetrun.yml
+- include: mysql.yml
+- include: mysqlbin.yml

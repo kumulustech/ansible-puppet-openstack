@@ -66,8 +66,8 @@
 #  - name: run puppet
 #    command: puppet apply -v -d /etc/puppet/manifests/site.pp
 
-  - name: reboot if selinux file is changed
-    command: /sbin/reboot
-    async: 0
-    poll: 0
-    ignore_errors: true
+#  - name: reboot if selinux file is changed
+#    command: /sbin/reboot
+#    async: 0
+#    poll: 0
+#    ignore_errors: true

@@ -18,7 +18,12 @@ export OS_AUTH_URL=https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/
 export OS_TENANT_ID=10195846978052
 export OS_TENANT_NAME="10032560941299-Project"
 export OS_USERNAME="rstarmer"
-export OS_REGION_NAME="region-b.geo-1"
+
+if [ "${region}" = "east" ]; then
+ export OS_REGION_NAME="region-a.geo-1"
+else
+ export OS_REGION_NAME="region-b.geo-1"
+fi
 # Still need a password, so if it's not already set, ask for it:
 
 if [ ! ${OS_PASSWORD} ];then 
@@ -43,7 +48,7 @@ neutron security-group-rule-create default --direction ingress --protocol tcp --
 neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 3306 --port-range-max 3306
 neutron security-group-rule-create default --direction ingress --protocol icmp --port-range-min 1 --port-range-max 1
 
-if [ -z ${FLOAT_ONE} || -z ${FLOAT_TWO}  ]; then
+if [[ -z ${FLOAT_ONE} || -z ${FLOAT_TWO}  ]]; then
  if [ `neutron floatingip-list | grep -v grep -v "+\|id" | wc -l` -le 0 ]; then
   float_one=$(neutron floatingip-create Ext-Net | awk '/ floating_ip_address / {print $4}')
   float_one_id=$(neutron floatingip-list | awk "/ ${float_one} / {print \$2}")
@@ -62,8 +67,8 @@ else
 fi
 
 
-nova boot --image ${image} --flavor standard.small --nic net-id=${private} --key-name rhs --poll node1
-nova boot --image ${image} --flavor standard.small --nic net-id=${private} --key-name rhs --poll node2
+nova boot --image ${image} --flavor standard.small --nic net-id=${private},v4-fixed-ip=10.0.0.10 --key-name rhs --poll node1
+nova boot --image ${image} --flavor standard.small --nic net-id=${private},v4-fixed-ip=10.0.0.11 --key-name rhs --poll node2
 
 # Allocate Floating IPs:
 node1_priv=$(nova show node1 | awk '/ private network / {print $5}')
@@ -72,10 +77,16 @@ node2_priv=$(nova show node2 | awk '/ private network / {print $5}')
 nova floating-ip-associate node1 ${float_one} --fixed-address ${node1_priv}
 nova floating-ip-associate node2 ${float_two} --fixed-address ${node2_priv}
 
-cat > inventory <<EOF
+if [ "${region}" = "east" ]; then
+	inventory="inventory-east"
+else
+	inventory="inventory-west"
+fi
+
+cat > ${inventory} <<EOF
 [openstack]
-${float_one} db2_addr=${node2_priv}
-${float_two} db1_addr=${node1_priv}
+${float_one} remote_name=node2 remote_addr=${node2_priv}
+${float_two} remote_name=node1 remote_addr=${node1_priv}
 EOF
 
 OIFS=$IFS

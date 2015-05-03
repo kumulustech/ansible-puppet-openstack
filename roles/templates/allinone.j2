@@ -1,10 +1,10 @@
 openstack::region: 'openstack'
 
 ######## Networks
-openstack::network::api: '{{ ansible_eth1.ipv4.network }}/{{ ansible_eth1.ipv4.netmask | maskconvert }}'
-openstack::network::external: '{{ ansible_eth3.ipv4.network }}/{{ ansible_eth3.ipv4.netmask | maskconvert }}'
+openstack::network::api: '{{ ansible_eth0.ipv4.network }}/{{ ansible_eth0.ipv4.netmask | maskconvert }}'
+openstack::network::external: '{{ ansible_eth0.ipv4.network }}/{{ ansible_eth0.ipv4.netmask | maskconvert }}'
 openstack::network::management: '{{ ansible_eth0.ipv4.network }}/{{ ansible_eth0.ipv4.netmask | maskconvert }}'
-openstack::network::data: '{{ ansible_eth2.ipv4.network }}/{{ ansible_eth2.ipv4.netmask | maskconvert }}'
+openstack::network::data: '{{ ansible_eth0.ipv4.network }}/{{ ansible_eth0.ipv4.netmask | maskconvert }}'
 
 openstack::network::external::ippool::start: {{ ansible_local.preferences.external.poolstart }}
 openstack::network::external::ippool::end: {{ ansible_local.preferences.external.poolend }}

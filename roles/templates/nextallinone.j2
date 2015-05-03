@@ -17,10 +17,10 @@ openstack::network::neutron::private: '{{ ansible_local.preferences.neutron.priv
 
 ######## Fixed IPs (controllers)
 
-openstack::controller::address::api: '{{ ansible_local.preferences.api.controller }}'
-openstack::controller::address::management: '{{ ansible_local.preferences.management.controller }}'
-openstack::storage::address::api: '{{ ansible_local.preferences.api.storage }}'
-openstack::storage::address::management: '{{ ansible_local.preferences.management.storage }}'
+openstack::controller::address::api: '{{ ansible_eth1.ipv4.address }}'
+openstack::controller::address::management: '{{ ansible_eth0.ipv4.address }}'
+openstack::storage::address::api: '{{ ansible_eth1.ipv4.address }}'
+openstack::storage::address::management: '{{ ansible_eth0.ipv4.address }}'
 
 ######## Database
 
@@ -36,7 +36,7 @@ openstack::mysql::cinder::pass: 'fuva-wax'
 
 openstack::mysql::glance::user: 'glance'
 openstack::mysql::glance::pass: 'fuva-wax'
-openstack::glance::api_servers: ['{{ ansible_local.preferences.management.controller }}:9292']
+openstack::glance::api_servers: ['{{ ansible_eth0.ipv4.address }}:9292']
 
 openstack::mysql::nova::user: 'nova'
 openstack::mysql::nova::pass: 'fuva-wax'
@@ -51,12 +51,12 @@ openstack::mysql::heat::pass: 'fuva-wax'
 
 openstack::rabbitmq::user: 'openstack'
 openstack::rabbitmq::password: 'pose-vix'
-openstack::rabbitmq::hosts: ['{{ ansible_local.preferences.management.controller }}:5672']
+openstack::rabbitmq::hosts: ['{{ ansible_eth0.ipv4.address }}:5672']
 
 ######## Keystone
 
 openstack::keystone::admin_token: 'sosp-kyl'
-openstack::keystone::admin_email: 'chris.hoge@puppetlabs.com'
+openstack::keystone::admin_email: 'test@example.net'
 openstack::keystone::admin_password: 'openstack'
 
 openstack::keystone::tenants:
@@ -109,7 +109,7 @@ openstack::neutron::core_plugin: 'ml2'
 openstack::neutron::service_plugins: ['router', 'firewall', 'lbaas', 'vpnaas', 'metering']
 
 ######## Ceilometer
-openstack::ceilometer::address::management: '{{ ansible_local.preferences.management.controller }}'
+openstack::ceilometer::address::management: '{{ ansible_eth0.ipv4.address }}'
 openstack::ceilometer::mongo::username: 'mongo'
 openstack::ceilometer::mongo::password: 'mongosecretkey123'
 openstack::ceilometer::password: 'whi-truz'

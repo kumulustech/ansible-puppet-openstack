@@ -1,5 +1,5 @@
 ---
-- hosts: openstack
+- hosts: openstack[0]
 
   tasks:
   #install python-mysqldb
@@ -11,7 +11,63 @@
       dest: /etc/my.cnf
       section: mysqld
       option: server-id
-      value: 1
+      value: 101
+  - name: add binary log path
+    ini_file: 
+      dest: /etc/my.cnf
+      section: mysqld
+      option: log_bin
+      value: /var/log/mariadb/mariadb-bin.log
+  - name: add binary log index path
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: log_bin_index
+      value: /var/log/mariadb/mariadb-bin.index
+  - name: add database list
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: binlog_do_db
+      value: "{{ item }}"
+    with_items:
+      nova
+      neutron
+      glance
+      cinder
+      keystone
+      heat
+  - name: comment out bind_address
+    lineinfile: dest=/etc/my.cnf 
+                regexp='bind_address' 
+                line='#bind_address={{ ansible_eth0.ipv4.address }}'
+                state=absent
+  - name: add replication user
+    mysql_user:
+      name: replicator
+      password: password
+      host: "%"
+      priv: "*.*:REPLICATION SLAVE"
+      state: present
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted
+
+
+- hosts: openstack[1]
+
+  tasks:
+  #install python-mysqldb
+  - name: install MySQL-python
+    yum: name=MySQL-python state=present
+
+  - name: add mysql server-id
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: server-id
+      value: 201
   - name: add binary log path
     ini_file: 
       dest: /etc/my.cnf
@@ -29,14 +85,24 @@
       dest: /etc/my.cnf
       section: mysqld
       option: binlog_do_db
-      value: "{{ item }}"
+      value: example
+  - name: configure to replicate databases
+    lineinfile: dest=/etc/my.cnf 
+                insertafter='binlog_do_db'
+                line="{{ item.line }}"
+                state=present
     with_items:
-      nova
-      neutron
-      glance
-      cinder
-      keystone
-      heat
+      - { line: 'binlog_do_db=glance' }
+      - { line: 'binlog_do_db=keystone' }
+      - { line: 'binlog_do_db=cinder' }
+      - { line: 'binlog_do_db=neutron' }
+      - { line: 'binlog_do_db=nova'}
+      - { line: 'binlog_do_db=heat'}
+  - name: comment out bind_address
+    lineinfile: dest=/etc/my.cnf 
+                regexp='bind_address' 
+                line='#bind_address={{ ansible_eth0.ipv4.address }}'
+                state=present
   - name: add replication user
     mysql_user:
       name: replicator
@@ -44,3 +110,8 @@
       host: "%"
       priv: "*.*:REPLICATION SLAVE"
       state: present
+
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted

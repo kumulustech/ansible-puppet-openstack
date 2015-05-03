@@ -1,5 +1,5 @@
 [management]
-controller=10.0.10.43
+controller=10.0.10.88
 storage=10.0.10.43
 allowedhosts=10.0.10.%
 

@@ -1,14 +1,14 @@
 [management]
-controller=10.0.10.72
-storage=10.0.10.72
+controller=10.0.10.80
+storage=10.0.10.80
 allowedhosts=10.0.10.%
 
 [neutron]
 private=10.0.0.0/24
 
 [api]
-controller=10.10.10.25
-storage=10.10.10.25
+controller=10.10.10.32
+storage=10.10.10.32
 
 [external]
 poolstart= 10.10.30.100
@@ -17,4 +17,5 @@ gateway= 10.10.30.2
 dns= 10.10.30.2
 
 [replica]
-remote = 10.1.10.73
+remote = 10.0.10.81
+remoteip=10.1.10.55

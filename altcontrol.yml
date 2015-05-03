@@ -66,7 +66,7 @@
     command: cp /etc/puppet/modules/openstack/examples/hiera.yaml /etc/puppet/.
 
 
-  - template: src=/root/openstack-ansible-for-puppetlabs/roles/templates/allinone.j2 dest=/etc/puppet/hieradata/common.yaml owner=root group=root mode=0644
+  - template: src=/root/openstack-ansible-for-puppetlabs/roles/templates/nextallinone.j2 dest=/etc/puppet/hieradata/common.yaml owner=root group=root mode=0644
 
 #  - name: run puppet
 #    command: puppet apply -v -d /etc/puppet/manifests/site.pp

@@ -12,4 +12,4 @@
     file: path=/etc/ansible/facts.d state=directory owner=root group=root mode=0775
 #    when: p.stat.isdir is defined and not p.stat.isdir 
 
-  - copy: src=/root/osc/nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"
+  - copy: src=/root/openstack-ansible-for-puppetlabs/nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"

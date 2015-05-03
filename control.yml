@@ -42,7 +42,7 @@
     command: puppet module install puppetlabs-openstack
  
   # name: modify params.pp file for maria
-  - copy: src=/root/openstack-ansible-for-puppetlabs/roles/templates/params.pp dest=/etc/puppet/modules/mysql/manifests/params.pp owner=root group=root mode="u=rw,g=r,o=r"
+  - copy: src=./roles/templates/params.pp dest=/etc/puppet/modules/mysql/manifests/params.pp owner=root group=root mode="u=rw,g=r,o=r"
 
   - name: Copying hier.yaml
     command: cp /etc/puppet/modules/openstack/examples/hiera.yaml /etc/puppet/.
@@ -57,16 +57,16 @@
 #    when: p.stat.isdir is defined and not p.stat.isdir 
 
 
-#  - copy: src=/root/openstack-ansible-for-puppetlabs/nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"
+#  - copy: src=./nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"
 
 
-  - template: src=/root/openstack-ansible-for-puppetlabs/roles/templates/site.j2 dest=/etc/puppet/manifests/site.pp owner=root group=root mode=0644
+  - template: src=./roles/templates/site.j2 dest=/etc/puppet/manifests/site.pp owner=root group=root mode=0644
 
   - name: Copying hier.yaml
     command: cp /etc/puppet/modules/openstack/examples/hiera.yaml /etc/puppet/.
 
 
-  - template: src=/root/openstack-ansible-for-puppetlabs/roles/templates/allinone.j2 dest=/etc/puppet/hieradata/common.yaml owner=root group=root mode=0644
+  - template: src=./roles/templates/allinone.j2 dest=/etc/puppet/hieradata/common.yaml owner=root group=root mode=0644
 
 #  - name: run puppet
 #    command: puppet apply -v -d /etc/puppet/manifests/site.pp

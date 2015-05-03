@@ -52,10 +52,10 @@ openstack::mysql::heat::pass: 'fuva-wax'
 openstack::rabbitmq::user: 'openstack'
 openstack::rabbitmq::password: 'pose-vix'
 openstack::rabbitmq::hosts: ['{{ ansible_local.preferences.management.controller }}:5672']
-rabbitmq::config_cluster: 'true'
-rabbitmq::config_mirrored_queues: 'true'
+rabbitmq::config_cluster: true
+rabbitmq::config_mirrored_queues: true
 rabbitmq::cluster_nodes: [ '{{ ansible_eth0.ipv4.address }}', '{{ ansible_local.preferences.replica.remote }}']
-
+rabbitmq::wipe_db_on_cookie_change: true
 
 ######## Keystone
 

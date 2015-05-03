@@ -1,10 +1,20 @@
 ---
 - hosts: openstack
-
+  sudo: yes
   tasks:
 
-    # hame: check if ansible/fact.d exists
-  - stat: path=/etc/ansible/facts.d 
+  # Ensure /etc/hosts is defined
+  - name: Ensure hostname is defined in /etc/hosts
+    template: 
+      src: ./roles/templates/hosts.j2
+      dest: /etc/hosts 
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+
+  # name: check if ansible/fact.d exists
+  - stat:
+      path: /etc/ansible/facts.d 
     register: factd_created
     ignore_errors: true
 

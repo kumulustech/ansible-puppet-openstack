@@ -1,9 +1,0 @@
-DEVICE="eth1"
-BOOTPROTO="static"
-IPADDR=10.10.10.19
-NETMASK=255.255.255.0
-ONBOOT="yes"
-TYPE="Ethernet"
-USERCTL="yes"
-IPV6INIT="no"
-PEERDNS="yes"

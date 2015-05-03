@@ -1,6 +1,6 @@
 ---
 - hosts: openstack[0]
-
+  sudo: yes
   tasks:
   #install python-mysqldb
   - name: install MySQL-python
@@ -28,6 +28,7 @@
     ini_file:
       dest: /etc/my.cnf
       section: mysqld
+      state: present
       option: binlog_do_db
       value: "{{ item }}"
     with_items:
@@ -39,7 +40,7 @@
       heat
   - name: comment out bind_address
     lineinfile: dest=/etc/my.cnf 
-                regexp='bind_address' 
+                regexp='bind_address'
                 line='#bind_address={{ ansible_eth0.ipv4.address }}'
                 state=absent
   - name: add replication user
@@ -56,7 +57,7 @@
 
 
 - hosts: openstack[1]
-
+  sudo: yes
   tasks:
   #install python-mysqldb
   - name: install MySQL-python
@@ -81,26 +82,22 @@
       option: log_bin_index
       value: /var/log/mariadb/mariadb-bin.index
   - name: add database list
-    ini_file: 
+    ini_file:
       dest: /etc/my.cnf
       section: mysqld
+      state: present
       option: binlog_do_db
-      value: example
-  - name: configure to replicate databases
-    lineinfile: dest=/etc/my.cnf 
-                insertafter='binlog_do_db'
-                line="{{ item.line }}"
-                state=present
+      value: "{{ item }}"
     with_items:
-      - { line: 'binlog_do_db=glance' }
-      - { line: 'binlog_do_db=keystone' }
-      - { line: 'binlog_do_db=cinder' }
-      - { line: 'binlog_do_db=neutron' }
-      - { line: 'binlog_do_db=nova'}
-      - { line: 'binlog_do_db=heat'}
+      nova
+      neutron
+      glance
+      cinder
+      keystone
+      heat
   - name: comment out bind_address
     lineinfile: dest=/etc/my.cnf 
-                regexp='bind_address' 
+                regexp='bind_address'
                 line='#bind_address={{ ansible_eth0.ipv4.address }}'
                 state=present
   - name: add replication user

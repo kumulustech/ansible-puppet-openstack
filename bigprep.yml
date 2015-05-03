@@ -1,0 +1,38 @@
+---
+- hosts: openstack
+ 
+  tasks:
+
+# name: check if ansible/fact.d exists
+  - stat: path=/etc/ansible/facts.d 
+    register: factd_created
+    ignore_errors: true
+
+  - name: make directory if factd does not exist
+    file: path=/etc/ansible/facts.d state=directory owner=root group=root mode=0775
+#    when: p.stat.isdir is defined and not p.stat.isdir 
+
+  - copy: src=./nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"
+
+
+- hosts: openstack
+  sudo: yes
+  gather_facts: True
+
+  tasks:
+  - template: src=./roles/templates/bighosts.j2 dest=/etc/hosts owner=root group=root mode="u=rw,g=r,o=r" 
+
+  - copy: src=./nodefiles/{{ inventory_hostname }}/ifcfg-eth1 dest=/etc/sysconfig/network-scripts/ifcfg-eth1 owner=root group=root mode="u=rw,g=r,o=r"
+
+  - copy: src=./nodefiles/{{ inventory_hostname }}/ifcfg-eth2 dest=/etc/sysconfig/network-scripts/ifcfg-eth2 owner=root group=root mode="u=rw,g=r,o=r"
+
+  - copy: src=./nodefiles/{{ inventory_hostname }}/ifcfg-eth3 dest=/etc/sysconfig/network-scripts/ifcfg-eth3 owner=root group=root mode="u=rw,g=r,o=r"
+
+  - name: restarting networking
+    command: systemctl restart network.service
+
+  - name: reboot to ensure hosts file change takes effect 
+    command: /sbin/reboot
+    async: 0
+    poll: 0
+    ignore_errors: true

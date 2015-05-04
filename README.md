@@ -3,26 +3,21 @@ Use ansible to setup and deploy puppet
 Install iptools python package:
 pip install iptools
 
-Install ansible python package:
-pip install ansible
+Install ansible python package (or upgrade):
+pip install ansible --upgrade
 
-Add maskconvert filter:
-cat >> /usr/lib/python2.7/ansible/runner/filter_plugins/core.py <<EOF
+Add maskconvert filter in:
+/usr/lib/python2.7/ansible/runner/filter_plugins/core.py
+  # it may be in /usr/local/lib. or python2.6
+
 from iptools.ipv4 import *
+
+after the UUID declaration add:
 
 def maskconvert(mask):
         return netmask2prefix(mask)
-EOF
 
-sed -e '/utils.unicode/i from iptools.ipv4 import netmask2prefix' -i \
-/usr/lib/python2.7/site-packages/ansible/runner/filter_plugins/core.py
+in the 'def filters(self)' section at the end of the file, add the following:
 
-sed -e '/netmask2prefix/i \
-def maskconvert(mask):\
-    return netmask2prefix(mask)\
-' -i \
-/usr/lib/python2.7/site-packages/ansible/runner/filter_plugins/core.py
-
-sed -e "/: randomize_list,/i \'maskconvert\': maskconvert" -i \
-/usr/lib/python2.7/site-packages/ansible/runner/filter_plugins/core.py
+'maskconvert': maskconvert,
 

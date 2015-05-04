@@ -96,6 +96,8 @@ ip=($node1_priv)
 IFS=$OIFS
 priv_net=${ip[0]}.${ip[1]}.${ip[2]}."%"
 
+mkdir -p ./nodefiles
+
 cat > nodefiles/${float_one}.fact <<EOF
 [management]
 controller=${node1_priv}

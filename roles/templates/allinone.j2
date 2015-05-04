@@ -127,6 +127,8 @@ openstack::heat::encryption_key: 'heatsecretkey123'
 ######## Horizon
 
 openstack::horizon::secret_key: 'whu-ghuk'
+horizon::allowed_hosts: '*'
+horizon::server_aliases: ['localhost','127.0.0.1',"{{ ansible_default_ipv4.address }}","{{ float_addr  }}"]
 
 ######## Tempest
 

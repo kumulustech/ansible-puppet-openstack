@@ -85,8 +85,8 @@ fi
 
 cat > ${inventory} <<EOF
 [openstack]
-${float_one} remote_name=node2 remote_addr=${node2_priv}
-${float_two} remote_name=node1 remote_addr=${node1_priv}
+${float_one} local_name=node1 float_addr=${float_one} remote_name=node2 remote_addr=${node2_priv}
+${float_two} local_name=node2 float_addr=${float_two} remote_name=node1 remote_addr=${node1_priv}
 EOF
 
 OIFS=$IFS

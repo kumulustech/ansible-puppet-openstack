@@ -117,6 +117,7 @@ dns=8.8.8.8
 [replica]
 remote=${node2_priv}
 remoteip=${float_two}
+remote_name=node2
 EOF
 
 cat > nodefiles/${float_two}.fact <<EOF
@@ -141,6 +142,7 @@ dns=8.8.8.8
 [replica]
 remote=${node1_priv}
 remoteip=${float_one}
+remote_name=node1
 EOF
 
 # Now let's ansibleize these machines:

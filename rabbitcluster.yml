@@ -1,6 +1,6 @@
 ---
 - hosts: openstack[1]
-
+  sudo: yes
   tasks:
   - name: rabbitmq_clustering | config | stopping rabbitmq app
     command: rabbitmqctl stop_app

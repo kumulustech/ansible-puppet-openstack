@@ -15,11 +15,19 @@
     command: rabbitmqctl start_app
 
   - name: set the policy
-    rabbitmq_policy: name=ha-all pattern='^(?!amq\.).*' tags="ha-mode=all"
+    rabbitmq_policy:
+      name: ha-all
+      pattern: '^(?!amq\.).*'
+      tags:
+        ha-mode: all
 
 - hosts: openstack[0]
-
+  sudo: yes
   tasks:
   - name: set the policy
-    rabbitmq_policy: name=ha-all pattern='^(?!amq\.).*' tags="ha-mode=all"
+    rabbitmq_policy:
+      name: ha-all
+      pattern: '^(?!amq\.).*'
+      tags:
+        ha-mode: all
 

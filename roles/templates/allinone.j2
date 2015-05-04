@@ -54,8 +54,8 @@ openstack::rabbitmq::password: 'pose-vix'
 openstack::rabbitmq::hosts: ['{{ ansible_local.preferences.management.controller }}:5672']
 rabbitmq::config_cluster: true
 rabbitmq::config_mirrored_queues: true
-rabbitmq::cluster_nodes: [ '{{ ansible_default_ipv4.address }}', '{{ ansible_local.preferences.replica.remote }}']
 rabbitmq::wipe_db_on_cookie_change: true
+rabbitmq::cluster_nodes: [ '{{ ansible_default_ipv4.address }}', '{{ ansible_local.preferences.replica.remote }}']
 
 ######## Keystone
 

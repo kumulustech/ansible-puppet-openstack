@@ -3,4 +3,5 @@
   sudo: yes
   tasks:
   - name: run puppet
-    command: puppet apply -vd /etc/puppet/manifests/site.pp
+    command: puppet apply -vd /etc/puppet/manifests/site.pp --logdest /tmp/puppet.log creates=/root/openrc
+    ignore_errors: yes

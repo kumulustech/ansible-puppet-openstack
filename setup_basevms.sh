@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+# set -x
 # Launch VMs for OpenStack Development
 
 #Networks:
@@ -67,8 +67,8 @@ else
 fi
 
 
-nova boot --image ${image} --flavor standard.small --nic net-id=${private},v4-fixed-ip=10.0.0.10 --key-name rhs --poll node1
-nova boot --image ${image} --flavor standard.small --nic net-id=${private},v4-fixed-ip=10.0.0.11 --key-name rhs --poll node2
+nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.10 --key-name rhs --poll node1
+nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.11 --key-name rhs --poll node2
 
 # Allocate Floating IPs:
 node1_priv=$(nova show node1 | awk '/ private network / {print $5}')
@@ -145,7 +145,7 @@ EOF
 
 # Now let's ansibleize these machines:
 # First a couple preparatory steps...
-ansible-playbook -i ${nventory} -u centos run.yml
+ansible-playbook -i ${inventory} -u centos run.yml
 
 # Now let's get OpenStack running
 

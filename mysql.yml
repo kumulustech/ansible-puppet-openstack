@@ -1,11 +1,28 @@
 ---
-- hosts: openstack[0]
+- hosts: openstack
   sudo: yes
   tasks:
-  #install python-mysqldb
+
   - name: install MySQL-python
     yum: name=MySQL-python state=present
 
+  - name: update IPtables for MySQL port 3306
+    lineinfile:
+      dest: /etc/sysconfig/iptables
+      insertafter: 'ISCSI'
+      line: '-A INPUT -p tcp -m multiport --ports 3306 -m comment --comment "3306 - MySQL API" -m state --state NEW -j ACCEPT'
+
+  - name: reload IPtables
+    service:
+      name:  iptables
+      state: reloaded
+
+  - name: create root .my.cnf file with user and password information
+    template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
+
+- hosts: openstack[0]
+  sudo: yes
+  tasks:
   - name: add mysql server-id
     ini_file:
       dest: /etc/my.cnf
@@ -41,7 +58,7 @@
   - name: comment out bind_address
     lineinfile: dest=/etc/my.cnf 
                 regexp='bind_address'
-                line='#bind_address={{ ansible_eth0.ipv4.address }}'
+                line='#bind_address={{ ansible_default_ipv4.address }}'
                 state=absent
   - name: add replication user
     mysql_user:
@@ -49,6 +66,13 @@
       password: password
       host: "%"
       priv: "*.*:REPLICATION SLAVE"
+      state: present
+  - name: add root access
+    mysql_user:
+      name: root
+      password: "spam-gak"
+      host: "%"
+      priv: "*.*:ALL,GRANT"
       state: present
   - name: restart_mariadb
     service:
@@ -62,6 +86,9 @@
   #install python-mysqldb
   - name: install MySQL-python
     yum: name=MySQL-python state=present
+
+  - name: create root .my.cnf file with user and password information
+    template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
 
   - name: add mysql server-id
     ini_file:
@@ -98,7 +125,7 @@
   - name: comment out bind_address
     lineinfile: dest=/etc/my.cnf 
                 regexp='bind_address'
-                line='#bind_address={{ ansible_eth0.ipv4.address }}'
+                line='#bind_address={{ ansible_default_ipv4.address }}'
                 state=present
   - name: add replication user
     mysql_user:
@@ -106,6 +133,13 @@
       password: password
       host: "%"
       priv: "*.*:REPLICATION SLAVE"
+      state: present
+  - name: add root access
+    mysql_user:
+      name: root
+      password: "spam-gak"
+      host: "%"
+      priv: "*.*:ALL,GRANT"
       state: present
 
   - name: restart_mariadb

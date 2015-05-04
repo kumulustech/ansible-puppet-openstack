@@ -1,0 +1,25 @@
+---
+- hosts: openstack[1]
+
+  tasks:
+  - name: rabbitmq_clustering | config | stopping rabbitmq app
+    command: rabbitmqctl stop_app
+
+  - name: rabbitmq_clustering | config | resetting rabbitmq app
+    command: rabbitmqctl reset
+
+  - name: rabbitmq_clustering | config | joining rabbitmq cluster
+    command: rabbitmqctl join_cluster 'rabbit@{{ remote_name }}' 
+
+  - name: rabbitmq_clustering | config | starting rabbitmq app
+    command: rabbitmqctl start_app
+
+  - name: set the policy
+    rabbitmq_policy: name=ha-all pattern='^(?!amq\.).*' tags="ha-mode=all"
+
+- hosts: openstack[0]
+
+  tasks:
+  - name: set the policy
+    rabbitmq_policy: name=ha-all pattern='^(?!amq\.).*' tags="ha-mode=all"
+

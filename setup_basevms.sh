@@ -42,11 +42,11 @@ image=`glance image-list | awk '/ CentOS 7 x86_64 / {print $2}' | head -1`
 echo "Image ID: ${image}"
 
 # Set secuirty groups for 22,80,443,and ping
-neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 22 --port-range-max 22
-neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 80 --port-range-max 80
-neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 443 --port-range-max 443
-neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 3306 --port-range-max 3306
-neutron security-group-rule-create default --direction ingress --protocol icmp --port-range-min 1 --port-range-max 1
+neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 22 --port-range-max 22 --remote-ip-prefix 0.0.0.0/0
+neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 80 --port-range-max 80 --remote-ip-prefix 0.0.0.0/0
+neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 443 --port-range-max 443 --remote-ip-prefix 0.0.0.0/0
+neutron security-group-rule-create default --direction ingress --protocol tcp --port-range-min 3306 --port-range-max 3306 --remote-ip-prefix 0.0.0.0/0
+neutron security-group-rule-create default --direction ingress --protocol icmp --port-range-min 1 --port-range-max 1 --remote-ip-prefix 0.0.0.0/0
 
 if [[ -z ${FLOAT_ONE} || -z ${FLOAT_TWO}  ]]; then
  if [ `neutron floatingip-list | grep -v grep -v "+\|id" | wc -l` -le 0 ]; then
@@ -145,7 +145,7 @@ EOF
 
 # Now let's ansibleize these machines:
 # First a couple preparatory steps...
-ansible-playbook -i inventory -u centos run.yml
+ansible-playbook -i ${nventory} -u centos run.yml
 
 # Now let's get OpenStack running
 

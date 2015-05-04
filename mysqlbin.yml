@@ -11,14 +11,23 @@
       - openstack[1]
   tasks:
   - name: Get the current master servers replication status
-    mysql_replication: mode=getmaster
+    mysql_replication:
+      mode: getmaster
+      login_user: root
+      login_password: spam-gak
     delegate_to: "{{ ansible_local.preferences.replica.remoteip }}"
     register: repl_stat
+
   - name: stop slave
-    mysql_replication: mode=stopslave
+    mysql_replication:
+      mode: stopslave
+      login_user: root
+      login_password: spam-gak
 
   - name: Change the master in slave to start the replication
     mysql_replication:
+      login_user: root
+      login_password: spam-gak
       mode: changemaster
       master_host: "{{ ansible_local.preferences.replica.remote }}" 
       master_log_file: "{{ repl_stat.File }}"
@@ -27,8 +36,10 @@
       master_password: password
 
   - name: start slave
-    mysql_replication: mode=startslave
-
+    mysql_replication:
+      mode: startslave
+      login_user: root
+      login_password: spam-gak
 
 
 - hosts: openstack[1]
@@ -36,15 +47,23 @@
   gather_facts: True
   tasks:
   - name: Get the current master servers replication status
-    mysql_replication: mode=getmaster
+    mysql_replication:
+      mode: getmaster
+      login_user: root
+      login_password: spam-gak
     delegate_to: "{{ ansible_local.preferences.replica.remoteip }}"
     register: repl_stat
 
   - name: stop slave
-    mysql_replication: mode=stopslave
+    mysql_replication:
+      mode: stopslave
+      login_user: root
+      login_password: spam-gak
 
   - name: Change the master in slave to start the replication
     mysql_replication:
+      login_user: root
+      login_password: spam-gak
       mode: changemaster
       master_host: "{{ ansible_local.preferences.replica.remote }}"
       master_log_file: "{{ repl_stat.File }}"
@@ -53,4 +72,7 @@
       master_password: password
 
   - name: start slave
-    mysql_replication: mode=startslave
+    mysql_replication:
+      mode: startslave
+      login_user: root
+      login_password: spam-gak

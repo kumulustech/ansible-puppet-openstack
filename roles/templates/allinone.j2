@@ -1,10 +1,10 @@
 openstack::region: 'openstack'
 
 ######## Networks
-openstack::network::api: '{{ ansible_eth0.ipv4.network }}/{{ ansible_eth0.ipv4.netmask | maskconvert }}'
-openstack::network::external: '{{ ansible_eth0.ipv4.network }}/{{ ansible_eth0.ipv4.netmask | maskconvert }}'
-openstack::network::management: '{{ ansible_eth0.ipv4.network }}/{{ ansible_eth0.ipv4.netmask | maskconvert }}'
-openstack::network::data: '{{ ansible_eth0.ipv4.network }}/{{ ansible_eth0.ipv4.netmask | maskconvert }}'
+openstack::network::api: '{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask | maskconvert }}'
+openstack::network::external: '{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask | maskconvert }}'
+openstack::network::management: '{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask | maskconvert }}'
+openstack::network::data: '{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask | maskconvert }}'
 
 openstack::network::external::ippool::start: {{ ansible_local.preferences.external.poolstart }}
 openstack::network::external::ippool::end: {{ ansible_local.preferences.external.poolend }}
@@ -26,7 +26,7 @@ openstack::storage::address::management: '{{ ansible_local.preferences.managemen
 
 openstack::mysql::root_password: 'spam-gak'
 openstack::mysql::service_password: 'fuva-wax'
-openstack::mysql::allowed_hosts: ['localhost', '127.0.0.1', '{{ ansible_local.preferences.management.allowedhosts }}']
+openstack::mysql::allowed_hosts: ['localhost', '127.0.0.1', '{{ ansible_local.preferences.management.allowedhosts }}', '%']
 
 openstack::mysql::keystone::user: 'keystone'
 openstack::mysql::keystone::pass: 'fuva-wax'
@@ -52,6 +52,10 @@ openstack::mysql::heat::pass: 'fuva-wax'
 openstack::rabbitmq::user: 'openstack'
 openstack::rabbitmq::password: 'pose-vix'
 openstack::rabbitmq::hosts: ['{{ ansible_local.preferences.management.controller }}:5672']
+rabbitmq::config_cluster: true
+rabbitmq::config_mirrored_queues: true
+rabbitmq::cluster_nodes: [ '{{ ansible_default_ipv4.address }}', '{{ ansible_local.preferences.replica.remote }}']
+rabbitmq::wipe_db_on_cookie_change: true
 
 ######## Keystone
 

@@ -9,7 +9,7 @@
     command: rabbitmqctl reset
 
   - name: rabbitmq_clustering | config | joining rabbitmq cluster
-    command: rabbitmqctl join_cluster 'rabbit@{{ remote_name }}' 
+    command: rabbitmqctl join_cluster 'rabbit@{{ ansible_local.preferences.replica.remote_name }}' 
 
   - name: rabbitmq_clustering | config | starting rabbitmq app
     command: rabbitmqctl start_app

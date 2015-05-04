@@ -22,6 +22,7 @@ export OS_USERNAME="rstarmer"
 if [ "${region}" = "east" ]; then
  export OS_REGION_NAME="region-a.geo-1"
 else
+ export region=west
  export OS_REGION_NAME="region-b.geo-1"
 fi
 # Still need a password, so if it's not already set, ask for it:
@@ -76,7 +77,7 @@ node2_priv=$(nova show node2 | awk '/ private network / {print $5}')
 
 nova floating-ip-associate node1 ${float_one} --fixed-address ${node1_priv}
 nova floating-ip-associate node2 ${float_two} --fixed-address ${node2_priv}
-
+sleep 30
 if [ "${region}" = "east" ]; then
 	inventory="inventory-east"
 else

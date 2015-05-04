@@ -14,20 +14,9 @@
   - name: rabbitmq_clustering | config | starting rabbitmq app
     command: rabbitmqctl start_app
 
-  - name: set the policy
-    rabbitmq_policy:
-      name: ha-all
-      pattern: '^(?!amq\.).*'
-      tags:
-        ha-mode: all
-
-- hosts: openstack[0]
+- hosts: openstack
   sudo: yes
   tasks:
-  - name: set the policy
-    rabbitmq_policy:
-      name: ha-all
-      pattern: '^(?!amq\.).*'
-      tags:
-        ha-mode: all
+  - name: rabbitmq clustering policy
+    command: "/sbin/rabbitmqctl -q -n rabbit set_policy -p / ha-all '^(?!amq\\.).*' '{\"ha-mode\": \"all\"}' 0"
 

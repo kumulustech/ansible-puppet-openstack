@@ -5,3 +5,16 @@
   - name: run puppet
     command: puppet apply -vd /etc/puppet/manifests/site.pp --logdest /tmp/puppet.log creates=/root/openrc
     ignore_errors: yes
+
+# Fix IPTables for MySQL replication after puppet modifies IPTables
+  - name: update IPtables for MySQL port 3306
+    lineinfile:
+      dest: /etc/sysconfig/iptables
+      insertafter: 'ISCSI'
+      line: '-A INPUT -p tcp -m multiport --ports 3306 -m comment --comment "3306 - MySQL API" -m state --state NEW -j ACCEPT'
+
+  - name: reload IPtables
+    service:
+      name:  iptables
+      state: reloaded
+

@@ -4,7 +4,8 @@
 
 - include: prep.yml
 - include: control.yml
-- include: puppetrun.yml
 - include: mysql.yml
 - include: mysqlbin.yml
 - include: rabbitcluster.yml
+- include: puppetrun.yml
+

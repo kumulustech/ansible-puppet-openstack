@@ -3,32 +3,19 @@
   sudo: yes
   tasks:
 
-  - name: install MySQL-python
-    yum: name=MySQL-python state=present
-
-  - name: update IPtables for MySQL port 3306
-    lineinfile:
-      dest: /etc/sysconfig/iptables
-      insertafter: 'ISCSI'
-      line: '-A INPUT -p tcp -m multiport --ports 3306 -m comment --comment "3306 - MySQL API" -m state --state NEW -j ACCEPT'
-
-  - name: reload IPtables
+  - name: install mysql
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - MySQL-python
+      - mariadb-server
+      - mariadb
+  - name: restart_mariadb
     service:
-      name:  iptables
-      state: reloaded
+      name: mariadb
+      state: restarted
 
-  - name: create root .my.cnf file with user and password information
-    template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
-
-- hosts: openstack[0]
-  sudo: yes
-  tasks:
-  - name: add mysql server-id
-    ini_file:
-      dest: /etc/my.cnf
-      section: mysqld
-      option: server-id
-      value: 101
   - name: add binary log path
     ini_file: 
       dest: /etc/my.cnf
@@ -67,28 +54,27 @@
       host: "%"
       priv: "*.*:REPLICATION SLAVE"
       state: present
-  - name: add root access
-    mysql_user:
-      name: root
-      password: "spam-gak"
-      host: "%"
-      priv: "*.*:ALL,GRANT"
-      state: present
-  - name: restart_mariadb
-    service:
-      name: mariadb
-      state: restarted
+  # - name: add root access
+  #   mysql_user:
+  #     name: root
+  #     password: "spam-gak"
+  #     host: "%"
+  #     priv: "*.*:ALL,GRANT"
+  #     state: present
 
+- hosts: openstack[0]
+  sudo: yes
+  tasks:
+  - name: add mysql server-id
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: server-id
+      value: 101
 
 - hosts: openstack[1]
   sudo: yes
   tasks:
-  #install python-mysqldb
-  - name: install MySQL-python
-    yum: name=MySQL-python state=present
-
-  - name: create root .my.cnf file with user and password information
-    template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
 
   - name: add mysql server-id
     ini_file:
@@ -96,53 +82,11 @@
       section: mysqld
       option: server-id
       value: 201
-  - name: add binary log path
-    ini_file: 
-      dest: /etc/my.cnf
-      section: mysqld
-      option: log_bin
-      value: /var/log/mariadb/mariadb-bin.log
-  - name: add binary log index path
-    ini_file:
-      dest: /etc/my.cnf
-      section: mysqld
-      option: log_bin_index
-      value: /var/log/mariadb/mariadb-bin.index
-  - name: add database list
-    ini_file:
-      dest: /etc/my.cnf
-      section: mysqld
-      state: present
-      option: binlog_do_db
-      value: "{{ item }}"
-    with_items:
-      nova
-      neutron
-      glance
-      cinder
-      keystone
-      heat
-  - name: comment out bind_address
-    lineinfile: dest=/etc/my.cnf 
-                regexp='bind_address'
-                line='#bind_address={{ ansible_default_ipv4.address }}'
-                state=present
-  - name: add replication user
-    mysql_user:
-      name: replicator
-      password: password
-      host: "%"
-      priv: "*.*:REPLICATION SLAVE"
-      state: present
-  - name: add root access
-    mysql_user:
-      name: root
-      password: "spam-gak"
-      host: "%"
-      priv: "*.*:ALL,GRANT"
-      state: present
 
-  - name: restart_mariadb
-    service:
-      name: mariadb
-      state: restarted
+- hosts: openstack
+  sudo: yes
+  tasks:
+  # - name: create root .my.cnf file with user and password information
+  #   template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
+
+

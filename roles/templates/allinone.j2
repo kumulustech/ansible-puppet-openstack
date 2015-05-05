@@ -26,7 +26,7 @@ openstack::storage::address::management: '{{ ansible_local.preferences.managemen
 
 openstack::mysql::root_password: 'spam-gak'
 openstack::mysql::service_password: 'fuva-wax'
-openstack::mysql::allowed_hosts: ['localhost', '127.0.0.1', '{{ ansible_local.preferences.management.allowedhosts }}', '%']
+openstack::mysql::allowed_hosts: ['%']
 
 openstack::mysql::keystone::user: 'keystone'
 openstack::mysql::keystone::pass: 'fuva-wax'
@@ -51,7 +51,7 @@ openstack::mysql::heat::pass: 'fuva-wax'
 
 openstack::rabbitmq::user: 'openstack'
 openstack::rabbitmq::password: 'pose-vix'
-openstack::rabbitmq::hosts: ['{{ ansible_local.preferences.management.controller }}:5672']
+openstack::rabbitmq::hosts: ['{{ ansible_local.preferences.management.controller }}:5672','{{ ansible_local.preferences.replica.remote }}:5672']
 rabbitmq::config_cluster: true
 rabbitmq::config_mirrored_queues: true
 rabbitmq::wipe_db_on_cookie_change: true
@@ -127,6 +127,7 @@ openstack::heat::encryption_key: 'heatsecretkey123'
 ######## Horizon
 
 openstack::horizon::secret_key: 'whu-ghuk'
+horizon::allowed_hosts: ['*']
 horizon::server_aliases: ['*']
 
 ######## Tempest

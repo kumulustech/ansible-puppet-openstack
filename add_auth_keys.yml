@@ -1,0 +1,12 @@
+---
+- hosts: openstack
+  sudo: yes
+  tasks:
+  - name: add keys to root user
+    authorized_key:
+      user: root
+      key: https://github.com/{{ item }}.keys
+    with_items:
+     - bshetti
+     - rstarmer
+

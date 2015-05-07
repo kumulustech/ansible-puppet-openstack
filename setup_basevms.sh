@@ -149,7 +149,9 @@ remote_name=node1
 EOF
 
 # Now let's ansibleize these machines:
-# First a couple preparatory steps...
+# First let's give them a chance to finish booting...
+sleep 30
+
 ansible-playbook -i ${inventory} -u centos run.yml
 
 # Now let's get OpenStack running

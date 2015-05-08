@@ -5,10 +5,6 @@
 
 
 - hosts: openstack[0]
-  vars:
-    secondhost: "{{ item }}"
-    with_items:
-      - openstack[1]
   tasks:
   - name: Get the current master servers replication status
     mysql_replication:

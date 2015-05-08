@@ -1,0 +1,10 @@
+[mysqld]
+log_bin=/var/log/mariadb/mariadb-bin.log
+log_bin_index=/var/log/mariadb/mariadb-bin.index
+binlog_do_db=example
+binlog_do_db=keystone
+binlog_do_db=glance
+binlog_do_db=nova
+binlog_do_db=neutron
+binlog_do_db=cinder
+binlog_do_db=heat

@@ -2,9 +2,6 @@
 - name: and here it begins
   hosts: openstack
 
-- include: prep.yml
-- include: control.yml
-- include: puppetrun.yml
 - include: openstack_stop.yml
 - include: mysqldump.yml
 - include: mysql.yml

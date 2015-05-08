@@ -1,0 +1,7 @@
+---
+- hosts: openstack
+  sudo: yes
+  tasks:
+  - name: run puppet
+    command: openstack-service stop
+    ignore_errors: yes

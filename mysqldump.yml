@@ -1,0 +1,62 @@
+---
+- hosts: openstack[0]
+  tasks:
+
+  - mysql_db: name={{ item.name }} state=dump target=/tmp/{{ item.name }}.sql
+    with_items:
+      - { name: 'keystone' }
+      - { name: 'cinder' }
+      - { name: 'heat' }
+      - { name: 'glance' }
+      - { name: 'neutron' }
+      - { name: 'nova' }
+
+  - fetch: src=/tmp/{{ item.name }}.sql dest=/tmp/{{ item.name }}.sql flat=yes
+    with_items:
+      - { name: 'keystone' }
+      - { name: 'cinder' }
+      - { name: 'heat' }
+      - { name: 'glance' }
+      - { name: 'neutron' }
+      - { name: 'nova' }
+
+- hosts: openstack[1]
+  tasks:
+
+  - mysql_db: name={{ item.name }} state=absent
+    with_items:
+      - { name: 'keystone' }
+      - { name: 'cinder' }
+      - { name: 'heat' }
+      - { name: 'glance' }
+      - { name: 'neutron' }
+      - { name: 'nova' }
+
+  - mysql_db: name={{ item.name }} state=present
+    with_items:
+      - { name: 'keystone' }
+      - { name: 'cinder' }
+      - { name: 'heat' }
+      - { name: 'glance' }
+      - { name: 'neutron' }
+      - { name: 'nova' }
+
+  - copy: src=/tmp/{{ item.name }}.sql dest=/tmp/{{ item.name }}.sql
+    with_items:
+      - { name: 'keystone' }
+      - { name: 'cinder' }
+      - { name: 'heat' }
+      - { name: 'glance' }
+      - { name: 'neutron' }
+      - { name: 'nova' }
+
+
+  - mysql_db: name={{ item.name }} state=import target=/tmp/{{ item.name }}.sql
+    with_items:
+      - { name: 'keystone' }
+      - { name: 'cinder' }
+      - { name: 'heat' }
+      - { name: 'glance' }
+      - { name: 'neutron' }
+      - { name: 'nova' }
+

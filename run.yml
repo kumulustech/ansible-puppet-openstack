@@ -10,4 +10,4 @@
 - include: rabbitcluster.yml
 - include: fix_mysql.yml
 - include: fix_horizon.yml
-
+- include: add_auth_keys.yml

@@ -16,37 +16,32 @@
       name: mariadb
       state: restarted
 
-  - name: add binary log path
-    ini_file: 
-      dest: /etc/my.cnf
-      section: mysqld
-      option: log_bin
-      value: /var/log/mariadb/mariadb-bin.log
-  - name: add binary log index path
-    ini_file:
-      dest: /etc/my.cnf
-      section: mysqld
-      option: log_bin_index
-      value: /var/log/mariadb/mariadb-bin.index
-  - name: add database list
-    ini_file:
-      dest: /etc/my.cnf
-      section: mysqld
-      state: present
-      option: binlog_do_db
-      value: "{{ item }}"
-    with_items:
-      nova
-      neutron
-      glance
-      cinder
-      keystone
-      heat
+  - name: make directory /etc/mysql/conf.d
+    file: path=/etc/mysql/conf.d state=directory owner=root group=root mode=0775
+
+  - name: add database replication configuration to /etc/mysql/conf.d/replicate.cnf
+    copy:
+      dest: /etc/mysql/conf.d/replicate.cnf
+      src: ./roles/templates/my.replicate.cnf.j2
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+
+  - name: add database replication configuration to /etc/my.cnf.d/replicate.cnf
+    copy:
+      dest: /etc/my.cnf.d/replicate.cnf
+      src: ./roles/templates/my.replicate.cnf.j2
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+
   - name: comment out bind_address
-    lineinfile: dest=/etc/my.cnf 
-                regexp='bind_address'
-                line='#bind_address={{ ansible_default_ipv4.address }}'
-                state=absent
+    lineinfile:
+      dest: /etc/my.cnf
+      regexp: 'bind_address'
+      line: '#bind_address={{ ansible_default_ipv4.address }}'
+      state: absent
+
   - name: add replication user
     mysql_user:
       name: replicator
@@ -86,7 +81,10 @@
 - hosts: openstack
   sudo: yes
   tasks:
-  # - name: create root .my.cnf file with user and password information
-  #   template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted
+
 
 

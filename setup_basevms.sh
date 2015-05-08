@@ -20,10 +20,10 @@ export OS_TENANT_NAME="10032560941299-Project"
 export OS_USERNAME="rstarmer"
 
 if [ "${region}" = "east" ]; then
- export OS_REGION_NAME="region-a.geo-1"
+ export OS_REGION_NAME="region-b.geo-1"
 else
  export region=west
- export OS_REGION_NAME="region-b.geo-1"
+ export OS_REGION_NAME="region-a.geo-1"
 fi
 # Still need a password, so if it's not already set, ask for it:
 
@@ -68,8 +68,8 @@ else
 fi
 
 
-nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.10 --key-name rhs --poll node1
-nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.11 --key-name rhs --poll node2
+nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.10 --key-name root --poll node1
+nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.11 --key-name root --poll node2
 
 # Allocate Floating IPs:
 node1_priv=$(nova show node1 | awk '/ private network / {print $5}')
@@ -146,6 +146,7 @@ remoteip=${float_one}
 remote_name=node1
 EOF
 
+sleep 30
 # Now let's ansibleize these machines:
 # First a couple preparatory steps...
 ansible-playbook -i ${inventory} -u centos run.yml

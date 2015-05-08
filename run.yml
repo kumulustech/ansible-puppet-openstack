@@ -6,6 +6,8 @@
 - include: control.yml
 - include: mysql.yml
 - include: mysqlbin.yml
-- include: rabbitcluster.yml
 - include: puppetrun.yml
+- include: rabbitcluster.yml
+- include: fix_mysql.yml
+- include: fix_horizon.yml
 

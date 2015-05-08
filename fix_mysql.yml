@@ -1,0 +1,46 @@
+---
+- hosts: openstack
+  sudo: yes
+  tasks:
+  - name: comment out bind_address
+    lineinfile:
+      dest: /etc/my.cnf
+      regexp: 'bind_address'
+      line: '#bind_address={{ ansible_default_ipv4.address }}'
+      state: absent
+
+  - name: update IPtables for MySQL port 3306
+    lineinfile:
+      dest: /etc/sysconfig/iptables
+      insertafter: 'ISCSI'
+      line: '-A INPUT -p tcp -m multiport --ports 3306 -m comment --comment "3306 - MySQL API" -m state --state NEW -j ACCEPT'
+
+- hosts: openstack[0]
+  sudo: yes
+  tasks:
+  - name: add mysql server-id
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: server-id
+      value: 101
+
+- hosts: openstack[1]
+  sudo: yes
+  tasks:
+  - name: add mysql server-id
+    ini_file:
+      dest: /etc/my.cnf
+      section: mysqld
+      option: server-id
+      value: 201
+
+- hosts: openstack
+  sudo: yes
+  tasks:
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted
+
+

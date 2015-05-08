@@ -1,0 +1,20 @@
+---
+- hosts: openstack
+  sudo: yes
+  tasks:
+  - name: adjust horizon django allowed hosts to '*'
+    lineinfile:
+     dest: /etc/openstack-dashboard/local_settings
+     regexp: '^ALLOWED_HOSTS.*'
+     line: 'ALLOWED_HOSTS = ["*"]'
+
+  - name: adjust httpd conf to include Alias for '*'
+    lineinfile:
+      dest: /etc/httpd/conf.d/15-horizon_vhost.conf
+      insertafter: 'ServerAlias 127.0.0.1'
+      line: '  ServerAlias *'
+
+  - name: restart httpd/apache
+    service:
+      name: httpd
+      state: reloaded

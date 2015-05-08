@@ -2,25 +2,36 @@
 - hosts: openstack
   sudo: yes
   tasks:
-  - name: install EPEL repository (RedHat)
-    yum:
-      name: epel-release
+  # - name: install EPEL repository (RedHat)
+  #   yum:
+  #     name: epel-release
 
-  - name: install rabbitmq-server dependencies (RedHat)
-    yum: name="{{ item }}" state=present
-    with_items:
-      - erlang
-      - libselinux-python
+  # - name: install rabbitmq-server dependencies (RedHat)
+  #   yum: name="{{ item }}" state=present
+  #   with_items:
+  #     - erlang
+  #     - libselinux-python
 
-  - name: install rabbitmq-server (RedHat)
-    yum: name=http://www.rabbitmq.com/releases/rabbitmq-server/v3.1.5/rabbitmq-server-3.1.5-1.noarch.rpm state=present
+  # - name: install rabbitmq-server (RedHat)
+  #   yum: name=http://www.rabbitmq.com/releases/rabbitmq-server/v3.1.5/rabbitmq-server-3.1.5-1.noarch.rpm state=present
 
-  - name: copy erlang cookie (duplicate for mirror/replication)
-    copy: src=./roles/templates/erlang.cookie dest=/var/lib/rabbitmq/.erlang.cookie owner=rabbitmq group=rabbitmq mode="u+r,g-rwx,o-rwx"
+  # - name: copy erlang cookie (duplicate for mirror/replication)
+  #   copy: src=./roles/templates/erlang.cookie dest=/var/lib/rabbitmq/.erlang.cookie owner=rabbitmq group=rabbitmq mode="u+r,g-rwx,o-rwx"
 
-  - name: enable rabbitmq-server to survive reboot
-    service: name=rabbitmq-server enabled=yes state=restarted
+  # - name: enable rabbitmq-server to survive reboot
+  #   service: name=rabbitmq-server enabled=yes state=restarted
 
+  - name: comment out bind_address
+    lineinfile:
+      dest: /etc/my.cnf
+      regexp: 'bind_address'
+      line: '#bind_address={{ ansible_default_ipv4.address }}'
+      state: absent
+
+  - name: restart_mariadb
+    service:
+      name: mariadb
+      state: restarted
 
 - hosts: openstack[1]
   sudo: yes
@@ -32,7 +43,7 @@
     command: rabbitmqctl reset
 
   - name: rabbitmq_clustering | config | joining rabbitmq cluster
-    command: rabbitmqctl join_cluster 'rabbit@{{ ansible_local.preferences.replica.remote_name }}' 
+    command: rabbitmqctl join_cluster 'rabbit@{{ ansible_local.preferences.replica.remote_name }}'
 
   - name: rabbitmq_clustering | config | starting rabbitmq app
     command: rabbitmqctl start_app

@@ -3,6 +3,7 @@
   hosts: openstack
 
 - include: prep.yml
+- include: add_auth_keys.yml
 - include: control.yml
 - include: puppetrun.yml
 - include: openstack_stop.yml

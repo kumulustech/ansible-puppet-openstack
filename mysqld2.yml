@@ -2,7 +2,7 @@
 - hosts: openstack[0]
   tasks:
 
-  - mysql_db: name={{ item.name }} state=dump target=/tmp/{{ item.name }}.sql
+  - mysql_db: name=keystone state=dump target=/tmp/{{ item.name }}.sql
     with_items:
       - { name: 'keystone' }
       - { name: 'cinder' }

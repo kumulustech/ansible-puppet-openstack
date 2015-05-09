@@ -1,6 +1,24 @@
 ---
 - hosts: openstack[0]
+  sudo: yes
   tasks:
+
+  - name: install MySQL-python
+    yum: name=MySQL-python state=present
+
+  - name: update IPtables for MySQL port 3306
+    lineinfile:
+      dest: /etc/sysconfig/iptables
+      insertafter: 'ISCSI'
+      line: '-A INPUT -p tcp -m multiport --ports 3306 -m comment --comment "3306 - MySQL API" -m state --state NEW -j ACCEPT'
+
+  - name: reload IPtables
+    service:
+      name:  iptables
+      state: reloaded
+
+  - name: create root .my.cnf file with user and password information
+    template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
 
   - mysql_db: name={{ item.name }} state=dump target=/tmp/{{ item.name }}.sql
     with_items:
@@ -21,6 +39,7 @@
       - { name: 'nova' }
 
 - hosts: openstack[1]
+  sudo: yes
   tasks:
 
   - mysql_db: name={{ item.name }} state=absent

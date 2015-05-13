@@ -1,0 +1,52 @@
+---
+- hosts: openstack
+  sudo: yes
+  tasks:
+
+# alternative way to get the repo or gluster server  
+#  - copy: src=./roles/gluster/gluster.repo dest=/etc/yum.repos.d/gluster.repo
+
+#  - lineinfile: dest=/etc/yum.repos.d/CentOS-Base.repo line='exclude=glusterfs*' state=present
+
+  - name: wget the proper repo
+    command: wget -P /etc/yum.repos.d http://download.gluster.org/pub/gluster/glusterfs/LATEST/RHEL/glusterfs-epel.repo
+
+  - name: install gluster server
+    yum: name=glusterfs-server state=present
+
+
+- hosts: openstack[0]
+  sudo: yes
+
+  tasks:
+
+  - name: connect with peer
+    command: sudo gluster peer probe {{ remote_ip }}
+
+  - name: create gluster volume
+    gluster_volume: state=present name=Volume1 replicas=2 transport=tcp bricks="{{ ansible_default_ipv4.address }}:/srv/gluster-storage, {{ remote_addr }}:/src/gluster-storage" force=yes
+    run_once: true
+    register: vol_result
+
+  - name: start gluster volume
+    gluster_volume: status=started name=Volume1
+    when: vol_result | success
+
+
+- hosts: openstack
+  sudo: yes
+  tasks:
+
+  - name: install gluster fs
+    yum: name=glusterfs state=present
+
+  - name: install gluster fuse
+    yum: name=gluster-fuse state=present
+
+#  - name: make mnt directory
+#    file: path=/mnt/storage-pool state=directory owner=root group=root mode=0775
+
+#  - name: run the mount command
+#    command: sudo mount -t glusterfs {{ ansible_default_ipv4}}:Volume1  /mnt/storage-pool/
+
+  - mount: name=/mnt/storage-pool src=/srv/gluster-storage fstype=glusterfs state=present

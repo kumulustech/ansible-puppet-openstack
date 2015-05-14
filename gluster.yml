@@ -14,6 +14,8 @@
   - name: install gluster server
     yum: name=glusterfs-server state=present
 
+  - service: name=glusterd state=started
+
 
 - hosts: openstack[0]
   sudo: yes
@@ -21,15 +23,19 @@
   tasks:
 
   - name: connect with peer
-    command: sudo gluster peer probe {{ remote_ip }}
+    command: sudo gluster peer probe {{ remote_addr }}
+
+#  - name: create gluster volume
+#    gluster_volume: state=present name=Volume1 replicas=2 transport=tcp bricks=/srv/gluster-storage force=yes cluster="{{ ansible_default_ipv4.address }}, {{ remote_addr }}"
+#    run_once: true
+#    register: vol_result
 
   - name: create gluster volume
-    gluster_volume: state=present name=Volume1 replicas=2 transport=tcp bricks="{{ ansible_default_ipv4.address }}:/srv/gluster-storage, {{ remote_addr }}:/src/gluster-storage" force=yes
-    run_once: true
+    command: gluster volume create volume1 replica 2 transport tcp {{ ansible_default_ipv4.address }}:/srv/gluster-storage {{ remote_addr }}:/srv/gluster-storage force
     register: vol_result
 
   - name: start gluster volume
-    gluster_volume: status=started name=Volume1
+    gluster_volume: state=started name=volume1
     when: vol_result | success
 
 
@@ -41,12 +47,12 @@
     yum: name=glusterfs state=present
 
   - name: install gluster fuse
-    yum: name=gluster-fuse state=present
+    yum: name=glusterfs-fuse state=present
 
-#  - name: make mnt directory
-#    file: path=/mnt/storage-pool state=directory owner=root group=root mode=0775
+  - name: make mnt directory
+    file: path=/mnt/storage-pool state=directory owner=root group=root mode=0775
 
-#  - name: run the mount command
-#    command: sudo mount -t glusterfs {{ ansible_default_ipv4}}:Volume1  /mnt/storage-pool/
+  - name: run the mount command
+    command: sudo mount -t glusterfs {{ ansible_default_ipv4.address}}:volume1  /mnt/storage-pool/
 
-  - mount: name=/mnt/storage-pool src=/srv/gluster-storage fstype=glusterfs state=present
+#  - mount: name=/mnt/storage-pool src="{{ ansible_default_ipv4.address}}:/volume1"  fstype=glusterfs state=mounted

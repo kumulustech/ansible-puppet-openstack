@@ -24,6 +24,9 @@
   - name: install dev packages
     yum: name="@Development tools" state=present
 
+  - name: install wget
+    yum: name=wget state=present
+
   - name: install ruby
     yum: name=ruby state=present
 

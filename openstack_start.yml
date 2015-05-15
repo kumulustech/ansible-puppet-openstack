@@ -1,4 +1,14 @@
 ---
+- hosts: openstack[0]
+  sudo: yes
+  tasks:
+  - name: move glance directories to gluster
+    script: mv_glance_nova.sh creates=/mnt/storage-pool/migrated
+- hosts: openstack[1]
+  sudo: yes
+  tasks:
+  - name: link glance and nova directories to gluster
+    script: ln_glance_nova.sh removes=/mnt/storage-pool/migrated
 - hosts: openstack
   sudo: yes
   tasks:

@@ -1,0 +1,63 @@
+---
+- hosts: openstack
+  sudo: yes
+  tasks:
+
+  - name: wget the proper repo
+    command: wget -P /etc/yum.repos.d http://download.gluster.org/pub/gluster/glusterfs/LATEST/RHEL/glusterfs-epel.repo
+
+  - name: install gluster server
+    yum: name=glusterfs-server state=present
+
+  - service: name=glusterd state=started
+
+- hosts: openstack[0]
+  sudo: yes
+  tasks:
+
+#  - name: connect with peer
+#    command: gluster peer probe {{ remote_addr }}
+#
+  - name: create gluster volume
+    gluster_volume:
+      state: present
+      name: volume1
+      replicas: 2
+      transport: tcp
+      brick: /srv/gluster-storage
+      force: yes
+      cluster: "{{ remote_addr }}"
+    run_once: true
+    register: vol_result
+
+#  - name: create gluster volume
+#    command: gluster volume create volume1 replica 2 transport tcp {{ ansible_default_ipv4.address }}:/srv/gluster-storage {{ remote_addr }}:/srv/gluster-storage force
+#    register: vol_result
+
+  - name: start gluster volume
+    gluster_volume: state=started name=volume1
+    when: vol_result | success
+
+
+- hosts: openstack
+  sudo: yes
+  tasks:
+
+  - name: install gluster fs
+    yum: name=glusterfs state=present
+
+  - name: install gluster fuse
+    yum: name=glusterfs-fuse state=present
+
+  - name: make mnt directory
+    file: path=/mnt/storage-pool state=directory owner=root group=root mode=0775
+
+  - name: add fstab entry for mount point
+    lineinfile:
+      dest: /etc/fstab
+      line: "{{ ansible_default_ipv4.address}}:volume1 /mnt/storage-pool/ glusterfs defaults,_netdev 0 0"
+
+  - name: run the mount command
+    command: mount -a
+
+#  - mount: name=/mnt/storage-pool src="{{ ansible_default_ipv4.address}}:/volume1"  fstype=glusterfs state=mounted

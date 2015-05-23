@@ -6,6 +6,12 @@
   - name: wget the proper repo
     command: wget -P /etc/yum.repos.d http://download.gluster.org/pub/gluster/glusterfs/LATEST/RHEL/glusterfs-epel.repo
 
+  - name: install epel-release
+    yum: name=epel-release state=present
+
+  - name: install gluster extra services
+    yum: name=userspace-rcu-devel state=present
+
   - name: install gluster server
     yum: name=glusterfs-server state=present
 
@@ -15,29 +21,28 @@
   sudo: yes
   tasks:
 
-#  - name: connect with peer
-#    command: gluster peer probe {{ remote_addr }}
-#
-  - name: create gluster volume
-    gluster_volume:
-      state: present
-      name: volume1
-      replicas: 2
-      transport: tcp
-      brick: /srv/gluster-storage
-      force: yes
-      cluster: "{{ remote_addr }}"
-    run_once: true
-    register: vol_result
+  - name: connect with peer
+    command: gluster peer probe {{ remote_addr }}
 
 #  - name: create gluster volume
-#    command: gluster volume create volume1 replica 2 transport tcp {{ ansible_default_ipv4.address }}:/srv/gluster-storage {{ remote_addr }}:/srv/gluster-storage force
+#    gluster_volume:
+#      state: present
+#      name: volume1
+#      replicas: 2
+#      transport: tcp
+#      brick: /srv/gluster-storage
+#      force: yes
+#      cluster: "{{ remote_addr }}"
+#    run_once: true
 #    register: vol_result
+
+  - name: create gluster volume
+    command: gluster volume create volume1 replica 2 transport tcp {{ ansible_default_ipv4.address }}:/srv/gluster-storage {{ remote_addr }}:/srv/gluster-storage force creates=/srv/gluster-storage
+    register: vol_result
 
   - name: start gluster volume
     gluster_volume: state=started name=volume1
     when: vol_result | success
-
 
 - hosts: openstack
   sudo: yes

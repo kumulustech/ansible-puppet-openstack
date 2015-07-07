@@ -11,7 +11,7 @@
   - name: adjust httpd conf to include Alias for '*'
     lineinfile:
       dest: /etc/httpd/conf.d/15-horizon_vhost.conf
-      insertafter: 'ServerAlias 127.0.0.1'
+      insertafter: 'ServerName'
       line: '  ServerAlias *'
 
   - name: restart httpd/apache

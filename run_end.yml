@@ -1,5 +1,5 @@
 ---
-- name: and here it begins
+- name: and here it ends
   hosts: openstack
 
 - include: openstack_stop.yml
@@ -7,5 +7,6 @@
 - include: mysql.yml
 - include: mysqlbin.yml
 - include: rabbitcluster.yml
+- include: httpd.yml
 - include: fix_horizon.yml
 - include: openstack_start.yml

@@ -5,7 +5,7 @@
   # - name: ensure yum  updated first
   #   yum: name='*' state=latest
 
-  - selinux: policy=targeted state=disabled
+#  - selinux: policy=targeted state=disabled
 
   # - name: ensure SELinux is turned off
   #   action: command /usr/sbin/setenforce 0
@@ -27,44 +27,44 @@
   - name: install wget
     yum: name=wget state=present
 
-  - name: install ruby
-    yum: name=ruby state=present
+#  - name: install ruby
+#    yum: name=ruby state=present
+#
+#  - name: check if rpm puppet is installed
+#    yum: name=http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm state=present
 
-  - name: check if rpm puppet is installed
-    yum: name=http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm state=present
-
-  - name: install puppet server
-    yum: name=puppet-server state=present
-
-  - name: load up puppet labs modules
-    command: puppet module install puppetlabs-openstack
-
-  # name: modify params.pp file for maria
-  - copy: src=./roles/templates/params.pp dest=/etc/puppet/modules/mysql/manifests/params.pp owner=root group=root mode="u=rw,g=r,o=r"
-
-  - name: Copying hier.yaml
-    command: cp /etc/puppet/modules/openstack/examples/hiera.yaml /etc/puppet/.
-
-  # hame: check if hieradata exists
-  - stat: path=/etc/puppet/hieradata 
-    register: folder_created
-    ignore_errors: true
-
-  - name: make directory if hieradata does not exist
-    file: path=/etc/puppet/hieradata state=directory owner=root group=root mode=0775
-#    when: p.stat.isdir is defined and not p.stat.isdir 
-
-
-#  - copy: src=./nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"
-
-
-  - template: src=./roles/templates/site.j2 dest=/etc/puppet/manifests/site.pp owner=root group=root mode=0644
-
-  - name: Copying hier.yaml
-    command: cp /etc/puppet/modules/openstack/examples/hiera.yaml /etc/puppet/.
-
-
-  - template: src=./roles/templates/allinone.j2 dest=/etc/puppet/hieradata/common.yaml owner=root group=root mode=0644
+#  - name: install puppet server
+#    yum: name=puppet-server state=present
+#
+#  - name: load up puppet labs modules
+#    command: puppet module install puppetlabs-openstack
+#
+#  # name: modify params.pp file for maria
+#  - copy: src=./roles/templates/params.pp dest=/etc/puppet/modules/mysql/manifests/params.pp owner=root group=root mode="u=rw,g=r,o=r"
+#
+#  - name: Copying hier.yaml
+#    command: cp /etc/puppet/modules/openstack/examples/hiera.yaml /etc/puppet/.
+#
+#  # hame: check if hieradata exists
+#  - stat: path=/etc/puppet/hieradata 
+#    register: folder_created
+#    ignore_errors: true
+#
+#  - name: make directory if hieradata does not exist
+#    file: path=/etc/puppet/hieradata state=directory owner=root group=root mode=0775
+##    when: p.stat.isdir is defined and not p.stat.isdir 
+#
+#
+##  - copy: src=./nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"
+#
+#
+#  - template: src=./roles/templates/site.j2 dest=/etc/puppet/manifests/site.pp owner=root group=root mode=0644
+#
+#  - name: Copying hier.yaml
+#    command: cp /etc/puppet/modules/openstack/examples/hiera.yaml /etc/puppet/.
+#
+#
+#  - template: src=./roles/templates/allinone.j2 dest=/etc/puppet/hieradata/common.yaml owner=root group=root mode=0644
 
 #  - name: run puppet
 #    command: puppet apply -v -d /etc/puppet/manifests/site.pp

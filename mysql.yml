@@ -6,23 +6,15 @@
   - name: install MySQL-python
     yum: name=MySQL-python state=present
 
-  - name: update IPtables for MySQL port 3306
-    lineinfile:
-      dest: /etc/sysconfig/iptables
-      insertafter: 'ISCSI'
-      line: '-A INPUT -p tcp -m multiport --ports 3306 -m comment --comment "3306 - MySQL API" -m state --state NEW -j ACCEPT'
+  - name: enable firewall service
+    service: name=firewalld enabled=yes state=started
 
-  - name: reload IPtables
-    service:
-      name:  iptables
-      state: reloaded
-
-  - name: create root .my.cnf file with user and password information
-    template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
+  - name: open mysql firewall port
+    firewalld: port=3306/tcp permanent=true immediate=true state=enabled
 
   - name: add database replication configuration to /etc/my.cnf.d/replicate.cnf
     copy:
-      dest: /etc/mysql/conf.d/replicate.cnf
+      dest: /etc/my.cnf.d/replicate.cnf
       src: ./roles/templates/my.replicate.cnf.j2
       owner: root
       group: root
@@ -39,6 +31,8 @@
     mysql_user:
       name: replicator
       password: password
+      login_user: root
+      login_password: "7h!s!sApw"
       host: "%"
       priv: "*.*:REPLICATION SLAVE"
       state: present
@@ -46,7 +40,9 @@
   - name: add root access
     mysql_user:
       name: root
-      password: "spam-gak"
+      password: "7h!s!sApw"
+      login_user: root
+      login_password: "7h!s!sApw"
       host: "%"
       priv: "*.*:ALL,GRANT"
       state: present

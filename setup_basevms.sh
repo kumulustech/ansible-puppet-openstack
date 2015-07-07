@@ -20,10 +20,10 @@ export OS_TENANT_NAME="10032560941299-Project"
 export OS_USERNAME="rstarmer"
 
 if [ "${region}" = "east" ]; then
- export OS_REGION_NAME="region-b.geo-1"
+ export OS_REGION_NAME="region-a.geo-1"
 else
  export region=west
- export OS_REGION_NAME="region-a.geo-1"
+ export OS_REGION_NAME="region-b.geo-1"
 fi
 # Still need a password, so if it's not already set, ask for it:
 
@@ -38,6 +38,8 @@ fi
 # Network
 private=`neutron net-list | awk '/ private / {print $2}' | head -1`
 echo "Private Network ID: ${private}"
+tenant=`neutron net-list | awk '/ tenant / {print $2}' | head -1`
+echo "Tenant Network ID: ${tenant}"
 # Image
 image=`glance image-list | awk '/ CentOS 7 x86_64 / {print $2}' | head -1`
 echo "Image ID: ${image}"
@@ -68,8 +70,8 @@ else
 fi
 
 
-nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.10 --key-name root --poll node1
-nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.11 --key-name root --poll node2
+nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.10 --nic net-id=${tenant},v4-fixed-ip=192.168.0.10 --key-name root --poll node1
+nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-fixed-ip=10.0.0.11 --nic net-id=${tenant},v4-fixed-ip=192.168.0.11 --key-name root --poll node2
 
 # Allocate Floating IPs:
 node1_priv=$(nova show node1 | awk '/ private network / {print $5}')
@@ -86,8 +88,8 @@ fi
 
 cat > ${inventory} <<EOF
 [openstack]
-${float_one} local_name=node1 float_addr=${float_one} remote_name=node2 remote_addr=${node2_priv}
-${float_two} local_name=node2 float_addr=${float_two} remote_name=node1 remote_addr=${node1_priv}
+${float_one} local_name=node1 float_addr=${float_one} remote_name=node2 remote_addr=${node2_priv} remote_float_addr=${float_two}
+${float_two} local_name=node2 float_addr=${float_two} remote_name=node1 remote_addr=${node1_priv} remote_float_addr=${float_one}
 EOF
 
 OIFS=$IFS
@@ -152,7 +154,7 @@ EOF
 # First let's give them a chance to finish booting...
 sleep 30
 
-ansible-playbook -i ${inventory} -u centos run.yml
+#ansible-playbook -i ${inventory} -u centos run.yml
 
 # Now let's get OpenStack running
 

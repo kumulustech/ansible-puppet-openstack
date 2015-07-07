@@ -24,18 +24,6 @@
   - name: connect with peer
     command: gluster peer probe {{ remote_addr }}
 
-#  - name: create gluster volume
-#    gluster_volume:
-#      state: present
-#      name: volume1
-#      replicas: 2
-#      transport: tcp
-#      brick: /srv/gluster-storage
-#      force: yes
-#      cluster: "{{ remote_addr }}"
-#    run_once: true
-#    register: vol_result
-
   - name: create gluster volume
     command: gluster volume create volume1 replica 2 transport tcp {{ ansible_default_ipv4.address }}:/srv/gluster-storage {{ remote_addr }}:/srv/gluster-storage force creates=/srv/gluster-storage
     register: vol_result

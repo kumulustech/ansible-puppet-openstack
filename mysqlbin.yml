@@ -11,22 +11,22 @@
     mysql_replication:
       mode: getmaster
       login_user: root
-      login_password: spam-gak
-    delegate_to: "{{ ansible_local.preferences.replica.remoteip }}"
+      login_password: '7h!s!sApw'
+    delegate_to: "{{ remote_float_addr }}"
     register: repl_stat
 
   - name: stop slave
     mysql_replication:
       mode: stopslave
       login_user: root
-      login_password: spam-gak
+      login_password: '7h!s!sApw'
 
   - name: Change the master in slave to start the replication
     mysql_replication:
       login_user: root
-      login_password: spam-gak
+      login_password: '7h!s!sApw'
       mode: changemaster
-      master_host: "{{ ansible_local.preferences.replica.remote }}" 
+      master_host: "{{ remote_addr }}" 
       master_log_file: "{{ repl_stat.File }}"
       master_log_pos: "{{ repl_stat.Position }}"
       master_user: replicator
@@ -36,7 +36,7 @@
     mysql_replication:
       mode: startslave
       login_user: root
-      login_password: spam-gak
+      login_password: '7h!s!sApw'
 
 
 - hosts: openstack[1]
@@ -47,22 +47,22 @@
     mysql_replication:
       mode: getmaster
       login_user: root
-      login_password: spam-gak
-    delegate_to: "{{ ansible_local.preferences.replica.remoteip }}"
+      login_password: '7h!s!sApw'
+    delegate_to: "{{ remote_float_addr }}"
     register: repl_stat
 
   - name: stop slave
     mysql_replication:
       mode: stopslave
       login_user: root
-      login_password: spam-gak
+      login_password: '7h!s!sApw'
 
   - name: Change the master in slave to start the replication
     mysql_replication:
       login_user: root
-      login_password: spam-gak
+      login_password: '7h!s!sApw'
       mode: changemaster
-      master_host: "{{ ansible_local.preferences.replica.remote }}"
+      master_host: "{{ remote_addr }}"
       master_log_file: "{{ repl_stat.File }}"
       master_log_pos: "{{ repl_stat.Position }}"
       master_user: replicator
@@ -72,4 +72,4 @@
     mysql_replication:
       mode: startslave
       login_user: root
-      login_password: spam-gak
+      login_password: '7h!s!sApw'

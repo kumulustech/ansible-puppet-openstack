@@ -1,0 +1,10 @@
+---
+- hosts: openstack
+  sudo: yes
+  tasks:
+
+  - name: open http firewall port
+    firewalld: port=80/tcp permanent=true immediate=true state=enabled
+
+  - name: open https firewall port
+    firewalld: port=443/tcp permanent=true immediate=true state=enabled

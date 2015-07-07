@@ -6,24 +6,18 @@
   - name: install MySQL-python
     yum: name=MySQL-python state=present
 
-  - name: update IPtables for MySQL port 3306
-    lineinfile:
-      dest: /etc/sysconfig/iptables
-      insertafter: 'ISCSI'
-      line: '-A INPUT -p tcp -m multiport --ports 3306 -m comment --comment "3306 - MySQL API" -m state --state NEW -j ACCEPT'
-
-  - name: reload IPtables
-    service:
-      name:  iptables
-      state: reloaded
-
   - name: create root .my.cnf file with user and password information
     template: src=./roles/templates/my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0644
 
-  - mysql_db: name={{ item.name }} state=dump target=/tmp/{{ item.name }}.sql
+  - mysql_db:
+      name: "{{ item.name }}"
+      state: dump
+      target: /tmp/{{ item.name }}.sql
+      login_user: root
+      login_password: "7h!s!sApw"
     with_items:
       - { name: 'keystone' }
-      - { name: 'cinder' }
+ #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
       - { name: 'neutron' }
@@ -32,7 +26,7 @@
   - fetch: src=/tmp/{{ item.name }}.sql dest=/tmp/{{ item.name }}.sql flat=yes
     with_items:
       - { name: 'keystone' }
-      - { name: 'cinder' }
+ #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
       - { name: 'neutron' }
@@ -42,19 +36,27 @@
   sudo: yes
   tasks:
 
-  - mysql_db: name={{ item.name }} state=absent
+  - mysql_db:
+      name: "{{ item.name }}"
+      state: absent
+      login_user: root
+      login_password: "7h!s!sApw"
     with_items:
       - { name: 'keystone' }
-      - { name: 'cinder' }
+ #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
       - { name: 'neutron' }
       - { name: 'nova' }
 
-  - mysql_db: name={{ item.name }} state=present
+  - mysql_db:
+      name: "{{ item.name }}"
+      state: present
+      login_user: root
+      login_password: "7h!s!sApw"
     with_items:
       - { name: 'keystone' }
-      - { name: 'cinder' }
+ #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
       - { name: 'neutron' }
@@ -63,17 +65,22 @@
   - copy: src=/tmp/{{ item.name }}.sql dest=/tmp/{{ item.name }}.sql
     with_items:
       - { name: 'keystone' }
-      - { name: 'cinder' }
+ #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
       - { name: 'neutron' }
       - { name: 'nova' }
 
 
-  - mysql_db: name={{ item.name }} state=import target=/tmp/{{ item.name }}.sql
+  - mysql_db:
+      name: "{{ item.name }}"
+      state: import
+      target: /tmp/{{ item.name }}.sql
+      login_user: root
+      login_password: "7h!s!sApw"
     with_items:
       - { name: 'keystone' }
-      - { name: 'cinder' }
+ #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
       - { name: 'neutron' }

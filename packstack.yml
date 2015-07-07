@@ -1,0 +1,46 @@
+---
+- hosts: openstack
+  sudo: yes
+  vars:
+    password: '7h!s!sApw'
+    node1_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCiXWRZYexET6ZqOHJUrOi6bMWtRhhFqw4i/MBDIPZrzjgK7bGRgww778IWdTSQKh5POsdNlcRC0mKms6TMeSrVsTfVNM8ZeiOt+AsMtYn9OzBN6UUXhJKUudiNnMnvTe2gjDKj/ebG5cXZY3yRx7Ri3FhBnGJ6Y+k0Lkx7YEU/vzD1lBDfEKdhg5nDq4N4guxwcK+4Na2DyupCsTcVEj7LasvrhTpUi9OdRyEUNSdFzEsRTzNZBMh7FCFGT2IYLp2W0/lCgVpmzSMMhiz6BoLWMHPdVF87vRtij7i45Rl1TthieAzJbZ3giaLwQFF2KmLe1+5e5eiEOMU+EaM2ESth root@node1'
+    node2_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDO0Qc5x1+EaiZbX4ox574422HOgpb0TwII1Y9EAfoKPN8wCEQZtb+U2g0oOfoChs98OmDiXyDOqPK6QiTPTUuxT/LAy56uzZlUfHY71w6GkIBEz7LK7EHPFfRGukFnDkMqfuQvdh/G1qRVn7mOS7eit1LW5VILFOxz47/JVS9RtUPEpi0tT96+NXYK8Rzo974KeXz/Pof9O+gK4+xZtktDDpBQv/mAf0OvtWXK9tg4jvT1F47hOIJx1gJdSd+jydfxYWtYgT6UY9u7BKSB0gK2p8r56gNDPvekkysTigBysVfOV5cYMcgaU9RWO04jNXvkAgIaGqHXeeLNh1B1Gi+r root@node2'
+
+  tasks:
+
+  - name: upgrade all packages
+    yum: name="*" state=latest
+
+  - name: install dev packages
+    yum: name="@Development tools" state=present
+
+  - name: install wget
+    yum: name=wget state=present
+
+  - name: install firewalld
+    yum: name=firewalld state=present
+
+  - name: enable firewall service
+    service: name=firewalld enabled=yes state=started
+
+  - name: ensure epel repository is installed
+    yum: name=epel-release state=present
+
+  - name: RDO latest release
+    yum: name=https://rdo.fedorapeople.org/rdo-release.rpm state=present
+
+  - name: install packstack tools
+    yum: name=openstack-packstack state=present
+
+  - name: update packstack answer file
+    template: src=./roles/templates/packstack.j2 dest=/root/packstack.txt
+
+  - name: authorize node1 root
+    authorized_key: user="root" key="{{ node1_key }}"
+
+  - name: authorize node2 root
+    authorized_key: user="root" key="{{ node2_key }}"
+
+  - name: run packstack
+    shell: packstack --answer-file=/root/packstack.txt >& /tmp/pack.out
+    

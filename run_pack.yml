@@ -1,0 +1,16 @@
+---
+- name: and here it begins
+  hosts: openstack
+
+- include: prep.yml
+- include: add_auth_keys.yml
+- include: control.yml
+- include: gluster.yml
+- include: packstack.yml
+- include: openstack_stop.yml
+- include: mysqldump.yml
+- include: mysql.yml
+- include: mysqlbin.yml
+- include: rabbitcluster.yml
+- include: fix_horizon.yml
+- include: openstack_start.yml

@@ -13,13 +13,13 @@
       mode: "u=rw,g=r,o=r"
 
   # name: check if ansible/fact.d exists
-  - stat:
-      path: /etc/ansible/facts.d 
-    register: factd_created
-    ignore_errors: true
-
-  - name: make directory if factd does not exist
-    file: path=/etc/ansible/facts.d state=directory owner=root group=root mode=0775
-#    when: p.stat.isdir is defined and not p.stat.isdir 
-
-  - copy: src=./nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"
+#  - stat:
+#      path: /etc/ansible/facts.d 
+#    register: factd_created
+#    ignore_errors: true
+#
+#  - name: make directory if factd does not exist
+#    file: path=/etc/ansible/facts.d state=directory owner=root group=root mode=0775
+##    when: p.stat.isdir is defined and not p.stat.isdir 
+#
+#  - copy: src=./nodefiles/{{ inventory_hostname }}.fact dest=/etc/ansible/facts.d/preferences.fact owner=root group=root mode="u=rw,g=r,o=r"

@@ -20,10 +20,10 @@ export OS_TENANT_NAME="10032560941299-Project"
 export OS_USERNAME="rstarmer"
 
 if [ "${region}" = "east" ]; then
- export OS_REGION_NAME="region-a.geo-1"
+ export OS_REGION_NAME="region-b.geo-1"
 else
  export region=west
- export OS_REGION_NAME="region-b.geo-1"
+ export OS_REGION_NAME="region-a.geo-1"
 fi
 # Still need a password, so if it's not already set, ask for it:
 
@@ -76,6 +76,9 @@ nova boot --image ${image} --flavor standard.medium --nic net-id=${private},v4-f
 # Allocate Floating IPs:
 node1_priv=$(nova show node1 | awk '/ private network / {print $5}')
 node2_priv=$(nova show node2 | awk '/ private network / {print $5}')
+
+echo "Node 1 private address: ${node1_priv}"
+echo "Node 2 private address: ${node2_priv}"
 
 nova floating-ip-associate node1 ${float_one} --fixed-address ${node1_priv}
 nova floating-ip-associate node2 ${float_two} --fixed-address ${node2_priv}

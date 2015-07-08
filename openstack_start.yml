@@ -8,10 +8,10 @@
   sudo: yes
   tasks:
   - name: link glance and nova directories to gluster
-    script: ln_glance_nova.sh removes=/mnt/storage-pool/migrated
+    script: ln_glance_nova.sh removes=/mnt/storage-pool/migrated creates=/mnt/storage-pool/migration-complete
 - hosts: openstack
   sudo: yes
   tasks:
   - name: start openstack services
-    command: openstack-service start
+    command: openstack-service restart
     ignore_errors: yes

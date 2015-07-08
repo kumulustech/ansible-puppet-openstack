@@ -17,6 +17,7 @@
       login_password: "7h!s!sApw"
     with_items:
       - { name: 'keystone' }
+      - { name: 'sahara' }
  #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
@@ -26,6 +27,7 @@
   - fetch: src=/tmp/{{ item.name }}.sql dest=/tmp/{{ item.name }}.sql flat=yes
     with_items:
       - { name: 'keystone' }
+      - { name: 'sahara' }
  #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
@@ -43,6 +45,7 @@
       login_password: "7h!s!sApw"
     with_items:
       - { name: 'keystone' }
+      - { name: 'sahara' }
  #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
@@ -56,6 +59,7 @@
       login_password: "7h!s!sApw"
     with_items:
       - { name: 'keystone' }
+      - { name: 'sahara' }
  #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
@@ -65,6 +69,7 @@
   - copy: src=/tmp/{{ item.name }}.sql dest=/tmp/{{ item.name }}.sql
     with_items:
       - { name: 'keystone' }
+      - { name: 'sahara' }
  #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
@@ -80,6 +85,7 @@
       login_password: "7h!s!sApw"
     with_items:
       - { name: 'keystone' }
+      - { name: 'sahara' }
  #     - { name: 'cinder' }
       - { name: 'heat' }
       - { name: 'glance' }
